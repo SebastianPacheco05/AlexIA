@@ -1,4 +1,4 @@
-# GemiLexa
+# AlexIA
 
 Base en Rust de una skill comunitaria para consultar Gemini desde Alexa.
 Software gratuito y de codigo abierto, licencia MIT, sin suscripciones,
