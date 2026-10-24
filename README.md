@@ -53,7 +53,7 @@ el estable actual), Cargo y las herramientas de compilacion de C++ requeridas
 por Rust MSVC. Instalacion oficial: https://www.rust-lang.org/tools/install
 
 ```powershell
-Set-Location C:\workSpace\GemiLexa
+Set-Location C:\workSpace\AlexIA
 $env:BIND_ADDR = '127.0.0.1:3000'
 cargo run
 ```
@@ -98,8 +98,8 @@ de publicar una version reproducible.
 ## Docker
 
 ```powershell
-docker build -t gemilexa:local .
-docker run --rm -p 127.0.0.1:3000:3000 gemilexa:local
+docker build -t AlexIA:local .
+docker run --rm -p 127.0.0.1:3000:3000 AlexIA:local
 ```
 
 Si se usa `--env-file .env`, establecer `BIND_ADDR=0.0.0.0:3000` para escuchar

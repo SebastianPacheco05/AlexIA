@@ -7,10 +7,10 @@ COPY src ./src
 RUN cargo build --release
 
 FROM debian:bookworm-slim AS runtime
-RUN groupadd --system gemilexa && useradd --system --gid gemilexa --no-create-home gemilexa
+RUN groupadd --system AlexIA && useradd --system --gid AlexIA --no-create-home AlexIA
 WORKDIR /app
-COPY --from=builder /app/target/release/gemilexa /usr/local/bin/gemilexa
+COPY --from=builder /app/target/release/AlexIA /usr/local/bin/AlexIA
 ENV BIND_ADDR=0.0.0.0:3000
-USER gemilexa
+USER AlexIA
 EXPOSE 3000
-ENTRYPOINT ["/usr/local/bin/gemilexa"]
+ENTRYPOINT ["/usr/local/bin/AlexIA"]

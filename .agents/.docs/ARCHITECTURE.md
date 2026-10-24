@@ -10,7 +10,7 @@ AlexIA permite conversar por voz mediante una Skill privada Alexa y un backend p
 
 ## Estado observado
 
-El repositorio conserva el nombre técnico histórico `gemilexa`: paquete Cargo, importaciones, binario, usuario Docker y README. AlexIA es el nombre del proyecto; esta documentación no renombra esos elementos. El README aún contiene rutas `C:\workSpace\GemiLexa` y la preferencia anterior por una API con cuota gratuita. La ruta actual es `C:\workSpace\AlexIA`; el requisito de acceso vigente es el descrito abajo. Esas referencias históricas no prueban una integración.
+El repositorio conserva el nombre técnico histórico `alexia`: paquete Cargo, importaciones, binario, usuario Docker y README. AlexIA es el nombre del proyecto; esta documentación no renombra esos elementos. El README aún contiene rutas `C:\workSpace\AlexIA` y la preferencia anterior por una API con cuota gratuita. La ruta actual es `C:\workSpace\AlexIA`; el requisito de acceso vigente es el descrito abajo. Esas referencias históricas no prueban una integración.
 
 - Rust edition 2024, MSRV declarada 1.85; Axum, Tokio, Serde y pulldown-cmark en Cargo.toml.
 - `GET /health` devuelve 200 con `status=ok`, `alexa=blocked`, `gemini=not_configured`.

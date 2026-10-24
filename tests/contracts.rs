@@ -1,5 +1,5 @@
 use axum::{body::{Body, to_bytes}, http::{Request, StatusCode}};
-use gemilexa::{app, config::Config, providers::{LanguageModel, ProviderError, gemini::GeminiProvider}, voice::normalize_for_voice};
+use alexia::{app, config::Config, providers::{LanguageModel, ProviderError, gemini::GeminiProvider}, voice::normalize_for_voice};
 use tower::ServiceExt;
 
 #[tokio::test]

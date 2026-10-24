@@ -21,7 +21,7 @@ Registrar fecha, estado (aprobado/propuesto/pendiente/implementado/sustituido), 
 
 ## Guardas del proyecto
 
-- Rust con Axum/Tokio/Serde; Reqwest/Rustls cuando se implemente transporte y proceda. AlexIA conserva por ahora los identificadores históricos `gemilexa`; no renombrarlos accidentalmente.
+- Rust con Axum/Tokio/Serde; Reqwest/Rustls cuando se implemente transporte y proceda. AlexIA conserva por ahora los identificadores históricos `alexia`; no renombrarlos accidentalmente.
 - Skill privada Alexa: firma, certificado, timestamp e ID esperado obligatorios. Mantener bloqueo hasta implementar y probar todos los controles; no añadir bypass.
 - Gemini es la preferencia V1. Cuenta personal sin API key ni facturación sigue pendiente de validar: no afirmar integración oficial, usar endpoints privados por suposición, extraer cookies ni sustituir por un servicio con claves/cobros sin decisión explícita.
 - Mantener proveedor desacoplado, preparado para Hermes/OmniRoute y otros; no asumir compatibilidad ni fallback automático.

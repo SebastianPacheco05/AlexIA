@@ -46,7 +46,7 @@ Respaldar código y configuración no secreta con Git; guardar por separado úni
 
 ## Imagen y cadena de entrega
 
-Ya existe Docker multistage: builder Rust y runtime Debian slim con usuario `gemilexa` sin root. No se ha probado la imagen en esta tarea documental. Antes de V1, fijar versiones/digests, generar y versionar Cargo.lock, construir con `--locked`, verificar certificados CA en runtime para HTTPS saliente y señal de parada. El Dockerfile actual aún usa etiquetas mutables y no copia lockfile.
+Ya existe Docker multistage: builder Rust y runtime Debian slim con usuario `alexia` sin root. No se ha probado la imagen en esta tarea documental. Antes de V1, fijar versiones/digests, generar y versionar Cargo.lock, construir con `--locked`, verificar certificados CA en runtime para HTTPS saliente y señal de parada. El Dockerfile actual aún usa etiquetas mutables y no copia lockfile.
 
 Mantener `.dockerignore` y `.gitignore` sin secretos ni artefactos. Etiquetar imágenes por commit para rollback; no confiar únicamente en `latest`. No añadir infraestructura externa ni servicios de datos por conveniencia.
 

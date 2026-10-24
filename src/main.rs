@@ -1,10 +1,10 @@
-use gemilexa::{app, config::Config};
+use alexia::{app, config::Config};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
     let listener = tokio::net::TcpListener::bind(config.bind_addr).await?;
-    eprintln!("GemiLexa listening on {}; Alexa is blocked", listener.local_addr()?);
+    eprintln!("AlexIA listening on {}; Alexa is blocked", listener.local_addr()?);
     axum::serve(listener, app())
         .with_graceful_shutdown(shutdown_signal())
         .await?;

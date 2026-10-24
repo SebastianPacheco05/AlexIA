@@ -16,7 +16,7 @@ Antes de habilitar V1:
 
 ## Validación local
 
-Los comandos siguientes usan el nombre técnico actual `gemilexa`. Requieren Rust/Cargo compatibles con Cargo.toml y herramientas del sistema. Ejecutar en la raíz correcta:
+Los comandos siguientes usan el nombre técnico actual `alexia`. Requieren Rust/Cargo compatibles con Cargo.toml y herramientas del sistema. Ejecutar en la raíz correcta:
 
 ```powershell
 Set-Location C:\workSpace\AlexIA
@@ -49,7 +49,7 @@ docker build -t alexia:local .
 docker run --rm --name alexia-local -p 127.0.0.1:3000:3000 alexia:local
 ```
 
-La etiqueta `alexia:local` es libre; el ejecutable interno sigue siendo `gemilexa`. Repetir los smoke checks anteriores. No hay instrucción HEALTHCHECK en el Dockerfile actual: configurar la sonda en el alojamiento o añadirla con herramientas disponibles en runtime cuando se implemente. Verificar usuario sin root, HTTPS saliente con CA válidas, consumo bajo carga y salida limpia al detenerlo. Ctrl+C actual no demuestra manejo de SIGTERM; incorporarlo y probarlo antes de producción.
+La etiqueta `alexia:local` es libre; el ejecutable interno sigue siendo `alexia`. Repetir los smoke checks anteriores. No hay instrucción HEALTHCHECK en el Dockerfile actual: configurar la sonda en el alojamiento o añadirla con herramientas disponibles en runtime cuando se implemente. Verificar usuario sin root, HTTPS saliente con CA válidas, consumo bajo carga y salida limpia al detenerlo. Ctrl+C actual no demuestra manejo de SIGTERM; incorporarlo y probarlo antes de producción.
 
 No incorporar `.env`, cookies ni tokens a la imagen. Antes de una entrega reproducible, fijar imagen base/digest, incluir lockfile, construir con `--locked` y etiquetar imagen con commit. Conservar una imagen anterior probada para reversión.
 
