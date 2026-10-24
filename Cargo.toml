@@ -6,6 +6,9 @@ rust-version = "1.85"
 license = "MIT"
 description = "Open-source Alexa voice bridge scaffold for Gemini"
 
+[lib]
+name = "alexia"
+
 [dependencies]
 axum = "0.8"
 pulldown-cmark = { version = "0.13", default-features = false }
