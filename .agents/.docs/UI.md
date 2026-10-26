@@ -40,6 +40,16 @@ no incluye OAuth, credenciales, llamadas a GitHub, automatizaciones ni base de
 datos. Marca pública oficial de GitHub servida como asset local. Se validó la
 sección en Chrome sin warnings ni errores; se versiona como módulo separado.
 
+Revisión 2026-10-25: se sustituye la tarjeta grande por un botón compacto con
+icono y nombre. Abre un modal nativo `dialog` con la preparación de conexión;
+autenticación sigue pendiente y el botón de conectar permanece deshabilitado.
+Cierre con botón, Escape y fondo; foco contenido por el diálogo y restaurado
+al botón de origen. Motivo: reducir espacio ocupado por cada integración.
+Validación: build Vite correcto, apertura y cierre del modal (botón y Escape),
+retorno de foco comprobado en Chrome y consola sin warnings/errores. Antes del
+commit se repitió la consulta real de Alexa: «Tres más tres es seis», cierre
+de sesión true y estado de proveedor ok (2445 ms), sin errores del servicio.
+
 ## Diseño
 
 Panel de ajustes en español: lateral oscuro, superficie clara, acento terracota,

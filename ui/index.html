@@ -52,13 +52,12 @@
                 </section>
                 <section id="panel-integrations" class="settings-panel hidden" aria-labelledby="integrations-title">
                   <div class="section-heading"><span class="section-number">04</span><div><h2 id="integrations-title">Integraciones</h2><p>Las aplicaciones que podrás conectar a tu asistente.</p></div></div>
-                  <article class="integration-card" aria-labelledby="github-title">
-                    <div class="integration-heading"><img src="/github-mark.png" width="44" height="44" alt="" /><div><h3 id="github-title">GitHub</h3><span class="integration-status">SIN CONECTAR</span></div><span class="integration-badge">PRÓXIMAMENTE</span></div>
-                    <p>Consulta repositorios y pull requests de tus proyectos desde AlexIA.</p>
-                    <div class="integration-planned"><span aria-hidden="true">↳</span><span>La conexión con GitHub estará disponible en una próxima versión.</span></div>
-                    <button type="button" class="button secondary integration-connect" disabled aria-describedby="github-help">Conectar GitHub <span aria-hidden="true">↗</span></button>
-                    <p id="github-help" class="hint">Todavía no se solicitan permisos ni se accede a tu cuenta.</p>
-                  </article>
+                  <div class="integration-list">
+                    <button type="button" id="open-github" class="integration-button" aria-haspopup="dialog" aria-controls="github-modal">
+                      <img src="/github-mark.png" width="24" height="24" alt="" />
+                      <span>GitHub</span>
+                    </button>
+                  </div>
                 </section>
               </div>
               <aside class="context-column" aria-label="Estado del asistente">
@@ -73,6 +72,16 @@
       </main>
     </div>
   </div>
+  <dialog id="github-modal" class="integration-modal" aria-labelledby="github-modal-title" aria-describedby="github-modal-description">
+    <div class="modal-heading">
+      <img src="/github-mark.png" width="40" height="40" alt="" />
+      <div><h2 id="github-modal-title">Conectar GitHub</h2><p>Integración con tu asistente</p></div>
+      <button type="button" id="close-github" class="modal-close" aria-label="Cerrar modal">×</button>
+    </div>
+    <p id="github-modal-description">Conecta tus proyectos para consultar repositorios y pull requests desde AlexIA.</p>
+    <div class="modal-planned"><span class="integration-badge">PRÓXIMAMENTE</span><p>La conexión con GitHub estará disponible en una próxima versión. Todavía no se solicitan permisos ni se accede a tu cuenta.</p></div>
+    <div class="modal-actions"><button type="button" id="cancel-github" class="button secondary">Cerrar</button><button type="button" class="button primary" disabled>Conectar GitHub ↗</button></div>
+  </dialog>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

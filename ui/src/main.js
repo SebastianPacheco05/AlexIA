@@ -118,4 +118,14 @@ $('#settings-form').addEventListener('submit', async event => {
   }
 });
 window.addEventListener('beforeunload', event => { if (state.dirty || state.saving) { event.preventDefault(); event.returnValue = ''; } });
+const githubModal = $('#github-modal');
+$('#open-github').addEventListener('click', () => githubModal.showModal());
+$('#close-github').addEventListener('click', () => githubModal.close());
+$('#cancel-github').addEventListener('click', () => githubModal.close());
+githubModal.addEventListener('close', () => $('#open-github').focus());
+githubModal.addEventListener('click', event => {
+  if (event.target !== githubModal) return;
+  const bounds = githubModal.getBoundingClientRect();
+  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) githubModal.close();
+});
 load();
