@@ -2,6 +2,8 @@ pub mod alexa;
 pub mod config;
 pub mod providers;
 pub mod voice;
+pub mod settings;
+pub mod control;
 
 use alexa::service::AlexaService;
 use axum::{
