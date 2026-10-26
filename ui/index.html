@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#192521" />
+  <meta name="description" content="Configuración local de tu asistente AlexIA." />
+  <title>AlexIA · Configuración</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Ir a la configuración</a>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a href="/" class="brand" aria-label="AlexIA, inicio"><span class="brand-symbol">A<span>·</span></span><span>Alex<span class="brand-ia">IA</span><small>Tu asistente, a tu manera.</small></span></a>
+      <div class="sidebar-section">ESPACIO PERSONAL</div>
+      <nav aria-label="Configuración">
+        <button class="nav-item active" data-tab="provider" aria-current="page"><span aria-hidden="true">◈</span> Proveedor de IA <span class="nav-arrow" aria-hidden="true">↗</span></button>
+        <button class="nav-item" data-tab="prompt"><span aria-hidden="true">≡</span> Metaprompt</button>
+        <button class="nav-item" data-tab="environment"><span aria-hidden="true">⌘</span> Variables de entorno</button>
+      </nav>
+      <div class="sidebar-bottom"><span class="local-indicator"></span><div>Solo en este equipo<small>Configuración local y privada</small></div></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><span>AlexIA <span class="breadcrumb">/</span> Configuración</span><div class="connection"><span class="status-dot" id="connection-dot"></span><span id="connection-label">Conectando…</span></div></header>
+      <main id="main" class="content" tabindex="-1">
+        <div class="page-heading"><div><p class="eyebrow">CENTRO DE CONTROL</p><h1>Configura tu asistente<span>.</span></h1><p class="page-description">Ajusta cómo piensa y responde AlexIA. Sin tocar el código.</p></div><span class="version-tag">LOCAL / 01</span></div>
+        <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
+        <div id="restart-notice" class="notice warning hidden">Los ajustes de puertos o modo de interfaz están guardados. Reinicia AlexIA para empezar a usarlos.</div>
+        <form id="settings-form" aria-label="Ajustes de AlexIA">
+          <fieldset id="settings-fields" disabled>
+            <div class="workspace-grid">
+              <div>
+                <section id="panel-provider" class="settings-panel" aria-labelledby="provider-title">
+                  <div class="section-heading"><span class="section-number">01</span><div><h2 id="provider-title">Proveedor de inteligencia</h2><p>El motor detrás de cada respuesta.</p></div></div>
+                  <div class="provider-box"><div class="provider-icon" aria-hidden="true">✳</div><div><strong>Antigravity</strong><p>Gemini con tu sesión personal</p></div><span class="pill">DISPONIBLE</span></div>
+                  <div class="form-grid mt-6"><div class="field"><label for="provider">Proveedor</label><select id="provider" data-env="AI_PROVIDER"><option value="antigravity">Antigravity</option></select><p class="hint">Es el proveedor disponible en esta versión.</p></div><div class="field"><label for="level">Nivel de razonamiento</label><select id="level" data-env="GEMINI_LEVEL"><option value="low">Bajo · prioriza rapidez</option><option value="medium">Medio · equilibrio</option><option value="high">Alto · mayor análisis</option></select></div></div>
+                  <div class="field mt-6"><label for="model">Modelo de Gemini</label><input id="model" data-env="GEMINI_MODEL" placeholder="gemini-3.8-flash" spellcheck="false" autocomplete="off" required /><p class="hint">Nombre base del modelo. El nivel de razonamiento se añade automáticamente.</p></div>
+                  <div class="inline-note"><span aria-hidden="true">↗</span><p>Los cambios preparan una sesión nueva de Antigravity y se aplican a las próximas consultas.</p></div>
+                </section>
+                <section id="panel-prompt" class="settings-panel hidden" aria-labelledby="prompt-title">
+                  <div class="section-heading"><span class="section-number">02</span><div><h2 id="prompt-title">La voz de tu asistente</h2><p>Define cómo debe responder AlexIA.</p></div></div>
+                  <div class="field mt-6"><div class="label-row"><label for="metaprompt">Metaprompt</label><span id="prompt-count" class="hint">0 caracteres</span></div><textarea id="metaprompt" rows="13" maxlength="16384" spellcheck="true" required aria-describedby="prompt-help"></textarea><p id="prompt-help" class="hint">Describe idioma, tono y extensión. Las instrucciones se procesan antes de recibir tu pregunta.</p></div>
+                  <div class="inline-note"><span aria-hidden="true">≡</span><p>Se guarda en <code>prompts/meta-prompt.txt</code>. No necesitas recompilar ni reiniciar para cambiarlo.</p></div>
+                </section>
+                <section id="panel-environment" class="settings-panel hidden" aria-labelledby="environment-title">
+                  <div class="section-heading"><span class="section-number">03</span><div><h2 id="environment-title">Variables de entorno</h2><p>Conexiones, puertos y ajustes del servicio.</p></div></div>
+                  <p class="environment-help">Los secretos guardados se ocultan. Déjalos vacíos para conservar su valor; escribe uno nuevo solo para reemplazarlo.</p>
+                  <div id="environment-fields" class="environment-fields"></div>
+                  <div class="add-variable"><label class="sr-only" for="new-key">Nombre de la nueva variable</label><input id="new-key" placeholder="NUEVA_VARIABLE" spellcheck="false" autocomplete="off" /><button type="button" id="add-variable" class="button secondary">+ Agregar variable</button></div>
+                </section>
+
+              </div>
+              <aside class="context-column" aria-label="Estado del asistente">
+                <div class="context-card"><span class="context-icon" aria-hidden="true">◉</span><h2>Listo para escuchar</h2><p>Abre tu asistente con la voz y haz tu pregunta.</p><blockquote>“Alexa, abre mi asistente”</blockquote><div class="context-divider"></div><div class="detail"><span>Respuesta</span><strong>Automática</strong></div><div class="detail"><span>Al terminar</span><strong>Cierra la sesión</strong></div></div>
+                <div class="connection-card"><h3>Conexiones locales</h3><dl><div><dt>Interfaz web</dt><dd id="ui-address">—</dd></div><div><dt>Servicio Alexa</dt><dd id="backend-address">—</dd></div></dl><p>El túnel de Alexa debe apuntar al servicio, no a esta interfaz.</p></div>
+              </aside>
+            </div>
+          </fieldset>
+          <footer class="save-bar"><div class="save-state"><span id="dirty-dot" class="saved-dot"></span><span id="save-state">Cargando configuración…</span></div><div class="save-actions"><button type="button" id="reload" class="button secondary">Descartar cambios</button><button type="submit" id="save" class="button primary" disabled><span id="save-label">Guardar y aplicar</span><span aria-hidden="true">↗</span></button></div></footer>
+        </form>
+        <p class="footnote">Hecho para hablar menos con la configuración y más con tu asistente.</p>
+      </main>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
