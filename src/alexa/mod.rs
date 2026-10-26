@@ -1,6 +1,8 @@
 use axum::{Json, http::StatusCode};
 use serde::Serialize;
 
+pub mod service;
+
 #[derive(Serialize)]
 pub struct BlockedResponse {
     error: &'static str,
