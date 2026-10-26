@@ -18,6 +18,7 @@
         <button class="nav-item active" data-tab="provider" aria-current="page"><span aria-hidden="true">◈</span> Proveedor de IA <span class="nav-arrow" aria-hidden="true">↗</span></button>
         <button class="nav-item" data-tab="prompt"><span aria-hidden="true">≡</span> Metaprompt</button>
         <button class="nav-item" data-tab="environment"><span aria-hidden="true">⌘</span> Variables de entorno</button>
+        <button class="nav-item" data-tab="integrations"><span aria-hidden="true">⊞</span> Integraciones</button>
       </nav>
       <div class="sidebar-bottom"><span class="local-indicator"></span><div>Solo en este equipo<small>Configuración local y privada</small></div></div>
     </aside>
@@ -49,7 +50,16 @@
                   <div id="environment-fields" class="environment-fields"></div>
                   <div class="add-variable"><label class="sr-only" for="new-key">Nombre de la nueva variable</label><input id="new-key" placeholder="NUEVA_VARIABLE" spellcheck="false" autocomplete="off" /><button type="button" id="add-variable" class="button secondary">+ Agregar variable</button></div>
                 </section>
-
+                <section id="panel-integrations" class="settings-panel hidden" aria-labelledby="integrations-title">
+                  <div class="section-heading"><span class="section-number">04</span><div><h2 id="integrations-title">Integraciones</h2><p>Las aplicaciones que podrás conectar a tu asistente.</p></div></div>
+                  <article class="integration-card" aria-labelledby="github-title">
+                    <div class="integration-heading"><img src="/github-mark.png" width="44" height="44" alt="" /><div><h3 id="github-title">GitHub</h3><span class="integration-status">SIN CONECTAR</span></div><span class="integration-badge">PRÓXIMAMENTE</span></div>
+                    <p>Consulta repositorios y pull requests de tus proyectos desde AlexIA.</p>
+                    <div class="integration-planned"><span aria-hidden="true">↳</span><span>La conexión con GitHub estará disponible en una próxima versión.</span></div>
+                    <button type="button" class="button secondary integration-connect" disabled aria-describedby="github-help">Conectar GitHub <span aria-hidden="true">↗</span></button>
+                    <p id="github-help" class="hint">Todavía no se solicitan permisos ni se accede a tu cuenta.</p>
+                  </article>
+                </section>
               </div>
               <aside class="context-column" aria-label="Estado del asistente">
                 <div class="context-card"><span class="context-icon" aria-hidden="true">◉</span><h2>Listo para escuchar</h2><p>Abre tu asistente con la voz y haz tu pregunta.</p><blockquote>“Alexa, abre mi asistente”</blockquote><div class="context-divider"></div><div class="detail"><span>Respuesta</span><strong>Automática</strong></div><div class="detail"><span>Al terminar</span><strong>Cierra la sesión</strong></div></div>

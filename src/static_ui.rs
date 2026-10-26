@@ -14,6 +14,7 @@ pub fn router(control: Arc<Control>, root: PathBuf) -> Router {
     Router::new()
         .route("/", get(index))
         .route("/favicon.svg", get(favicon))
+        .route("/github-mark.png", get(github_mark))
         .route("/assets/{file}", get(asset))
         .with_state(Arc::new(root.join("ui/dist")))
         .layer(middleware::from_fn_with_state(control.clone(), local_files))
@@ -45,6 +46,9 @@ async fn index(State(root): State<Arc<PathBuf>>) -> Response {
 }
 async fn favicon(State(root): State<Arc<PathBuf>>) -> Response {
     file(&root.join("favicon.svg"), "image/svg+xml")
+}
+async fn github_mark(State(root): State<Arc<PathBuf>>) -> Response {
+    file(&root.join("github-mark.png"), "image/png")
 }
 async fn asset(State(root): State<Arc<PathBuf>>, Path(name): Path<String>) -> Response {
     if name.contains("..")

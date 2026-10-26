@@ -88,6 +88,7 @@ document.querySelectorAll('.nav-item').forEach(button => button.addEventListener
     if (item === button) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current');
   });
   document.querySelectorAll('.settings-panel').forEach(panel => panel.classList.toggle('hidden', panel.id !== `panel-${button.dataset.tab}`));
+  $('.save-bar').classList.toggle('hidden', button.dataset.tab === 'integrations');
 }));
 
 document.querySelectorAll('select[data-env], #model').forEach(input => input.addEventListener('input', () => updateValue(input.dataset.env, input.value, input)));
