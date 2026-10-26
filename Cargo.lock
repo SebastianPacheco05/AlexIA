@@ -7,6 +7,7 @@ name = "AlexIA"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "dotenvy",
  "pulldown-cmark",
  "serde",
  "serde_json",
@@ -83,6 +84,12 @@ name = "bytes"
 version = "1.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc652a48c352aef3ea3aed32080501cf3ef6ed5da78602a020c991775b0aff04"
+
+[[package]]
+name = "dotenvy"
+version = "0.15.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
 
 [[package]]
 name = "errno"
@@ -427,6 +434,7 @@ version = "1.54.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b52fd3255258d26fac7264ab5a76b53c13367136dc011d3d6ad4f8ed070396a3"
 dependencies = [
+ "bytes",
  "libc",
  "mio",
  "pin-project-lite",
