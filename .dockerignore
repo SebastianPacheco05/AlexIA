@@ -7,3 +7,9 @@ target
 *.p12
 *.pfx
 *.log
+**/node_modules
+ui/dist
+.agents
+.codex
+.alexia-ui-*.tmp
+**/.alexia-ui-*.tmp
