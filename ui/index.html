@@ -3,85 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#192521" />
-  <meta name="description" content="Configuración local de tu asistente AlexIA." />
-  <title>AlexIA · Configuración</title>
+  <meta name="theme-color" content="#0c0d10" />
+  <meta name="description" content="Tu espacio de control para AlexIA." />
+  <title>AlexIA · Workspace</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body>
-  <a class="skip-link" href="#main">Ir a la configuración</a>
+  <a class="skip-link" href="#main">Ir al contenido</a>
   <div class="app-layout">
     <aside class="sidebar">
-      <a href="/" class="brand" aria-label="AlexIA, inicio"><span class="brand-symbol">A<span>·</span></span><span>Alex<span class="brand-ia">IA</span><small>Tu asistente, a tu manera.</small></span></a>
-      <div class="sidebar-section">ESPACIO PERSONAL</div>
+      <a href="/" class="brand" aria-label="AlexIA, inicio"><span class="brand-symbol"><i data-lucide="audio-lines"></i></span><span>Alex<span class="brand-ia">IA</span><small>PERSONAL WORKSPACE</small></span></a>
+      <div class="workspace-select"><span class="workspace-avatar">A</span><div><strong>Mi espacio</strong><span>Uso personal</span></div><span class="workspace-local">LOCAL</span></div>
+      <p class="nav-label">CONFIGURACIÓN</p>
       <nav aria-label="Configuración">
-        <button class="nav-item active" data-tab="provider" aria-current="page"><span aria-hidden="true">◈</span> Proveedor de IA <span class="nav-arrow" aria-hidden="true">↗</span></button>
-        <button class="nav-item" data-tab="prompt"><span aria-hidden="true">≡</span> Metaprompt</button>
-        <button class="nav-item" data-tab="environment"><span aria-hidden="true">⌘</span> Variables de entorno</button>
-        <button class="nav-item" data-tab="integrations"><span aria-hidden="true">⊞</span> Integraciones</button>
+        <button type="button" class="nav-item active" data-tab="provider" aria-controls="panel-provider" aria-current="page"><i data-lucide="brain-circuit"></i><span>Inteligencia</span><span class="nav-key">01</span></button>
+        <button type="button" class="nav-item" data-tab="prompt" aria-controls="panel-prompt"><i data-lucide="file-text"></i><span>Metaprompt</span><span class="nav-key">02</span></button>
+        <button type="button" class="nav-item" data-tab="environment" aria-controls="panel-environment"><i data-lucide="sliders-horizontal"></i><span>Entorno</span><span class="nav-key">03</span></button>
+        <span class="nav-label nav-connections">CONEXIONES</span>
+        <button type="button" class="nav-item" data-tab="integrations" aria-controls="panel-integrations"><i data-lucide="plug"></i><span>Integraciones</span><span class="nav-count">1</span></button>
       </nav>
-      <div class="sidebar-bottom"><span class="local-indicator"></span><div>Solo en este equipo<small>Configuración local y privada</small></div></div>
+      <div class="sidebar-note"><i data-lucide="shield-check"></i><strong>Tu equipo. Tus reglas.</strong><p>La configuración permanece en tu equipo.</p></div>
+      <div class="sidebar-bottom"><span class="avatar">A</span><div><strong>AlexIA local</strong><small>Espacio privado</small></div><span class="local-indicator"></span></div>
     </aside>
     <div class="main-shell">
-      <header class="topbar"><span>AlexIA <span class="breadcrumb">/</span> Configuración</span><div class="connection"><span class="status-dot" id="connection-dot"></span><span id="connection-label">Conectando…</span></div></header>
+      <header class="topbar"><div class="breadcrumbs"><span>Workspace</span><i data-lucide="chevron-right"></i><strong id="breadcrumb-current">Inteligencia</strong></div><div class="topbar-status"><span class="status-dot" id="connection-dot"></span><span id="connection-label">Conectando…</span><span class="topbar-divider"></span><i data-lucide="monitor"></i><span>Local</span></div></header>
       <main id="main" class="content" tabindex="-1">
-        <div class="page-heading"><div><p class="eyebrow">CENTRO DE CONTROL</p><h1>Configura tu asistente<span>.</span></h1><p class="page-description">Ajusta cómo piensa y responde AlexIA. Sin tocar el código.</p></div><span class="version-tag">LOCAL / 01</span></div>
+        <div class="page-heading"><div><p class="eyebrow"><span></span> TU ASISTENTE, A TU MANERA</p><h1 id="page-title">Un poco de inteligencia.<br><span>Mucho de ti.</span></h1><p id="page-description" class="page-description">Elige cómo piensa tu asistente. Nosotros nos encargamos del resto.</p></div><div class="heading-tag"><i data-lucide="audio-lines"></i><span>Diseñado para<br><strong>conversar.</strong></span></div></div>
         <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
-        <div id="restart-notice" class="notice warning hidden">Los ajustes de puertos o modo de interfaz están guardados. Reinicia AlexIA para empezar a usarlos.</div>
+        <div id="restart-notice" class="notice warning hidden"><i data-lucide="info"></i>Los puertos o el modo de interfaz cambiarán cuando reinicies AlexIA.</div>
         <form id="settings-form" aria-label="Ajustes de AlexIA">
           <fieldset id="settings-fields" disabled>
             <div class="workspace-grid">
-              <div>
+              <div class="primary-column">
                 <section id="panel-provider" class="settings-panel" aria-labelledby="provider-title">
-                  <div class="section-heading"><span class="section-number">01</span><div><h2 id="provider-title">Proveedor de inteligencia</h2><p>El motor detrás de cada respuesta.</p></div></div>
-                  <div class="provider-box"><div class="provider-icon" aria-hidden="true">✳</div><div><strong>Antigravity</strong><p>Gemini con tu sesión personal</p></div><span class="pill">DISPONIBLE</span></div>
-                  <div class="form-grid mt-6"><div class="field"><label for="provider">Proveedor</label><select id="provider" data-env="AI_PROVIDER"><option value="antigravity">Antigravity</option></select><p class="hint">Es el proveedor disponible en esta versión.</p></div><div class="field"><label for="level">Nivel de razonamiento</label><select id="level" data-env="GEMINI_LEVEL"><option value="low">Bajo · prioriza rapidez</option><option value="medium">Medio · equilibrio</option><option value="high">Alto · mayor análisis</option></select></div></div>
-                  <div class="field mt-6"><label for="model">Modelo de Gemini</label><input id="model" data-env="GEMINI_MODEL" placeholder="gemini-3.8-flash" spellcheck="false" autocomplete="off" required /><p class="hint">Nombre base del modelo. El nivel de razonamiento se añade automáticamente.</p></div>
-                  <div class="inline-note"><span aria-hidden="true">↗</span><p>Los cambios preparan una sesión nueva de Antigravity y se aplican a las próximas consultas.</p></div>
+                  <div class="card panel-card motion-item">
+                    <div class="section-heading"><div class="section-icon"><i data-lucide="cpu"></i></div><div><h2 id="provider-title">Motor de inteligencia</h2><p>El punto de partida de cada respuesta.</p></div><span class="micro-badge">PROVEEDOR</span></div>
+                    <div class="provider-box"><div class="provider-icon"><i data-lucide="sparkles"></i></div><div><strong>Antigravity</strong><p>Usa tu sesión personal de Gemini</p></div><span class="provider-choice"><i data-lucide="check"></i><span>Seleccionado</span></span></div>
+                    <div class="field provider-select"><label for="provider">Proveedor</label><select id="provider" data-env="AI_PROVIDER"><option value="antigravity">Antigravity</option></select><p class="hint">Antigravity es el proveedor disponible actualmente.</p></div>
+                    <div class="field model-field"><label for="model">Modelo de Gemini <span class="field-tag">EDITABLE</span></label><div class="input-wrap"><i data-lucide="box"></i><input id="model" data-env="GEMINI_MODEL" placeholder="gemini-3.8-flash" spellcheck="false" autocomplete="off" required /></div><p class="hint">Nombre base del modelo. AlexIA añade el nivel de razonamiento.</p></div>
+                  </div>
+                  <div class="card panel-card motion-item">
+                    <div class="section-heading"><div class="section-icon"><i data-lucide="sliders-horizontal"></i></div><div><h2>Nivel de razonamiento</h2><p>Encuentra tu equilibrio entre rapidez y análisis.</p></div></div>
+                    <div class="reasoning-options" role="radiogroup" aria-label="Nivel de razonamiento">
+                      <label class="reasoning-option"><input type="radio" name="reasoning" value="low" /><span class="reasoning-top"><i data-lucide="zap"></i><span class="radio-mark"></span></span><strong>Rápido</strong><small>Menos espera.<br>El dato esencial.</small><span class="recommended">RECOMENDADO</span></label>
+                      <label class="reasoning-option"><input type="radio" name="reasoning" value="medium" /><span class="reasoning-top"><i data-lucide="layers"></i><span class="radio-mark"></span></span><strong>Equilibrado</strong><small>Un punto medio<br>para cada consulta.</small></label>
+                      <label class="reasoning-option"><input type="radio" name="reasoning" value="high" /><span class="reasoning-top"><i data-lucide="brain"></i><span class="radio-mark"></span></span><strong>Profundo</strong><small>Más análisis.<br>Puede tardar más.</small></label>
+                    </div>
+                    <div class="quiet-note"><i data-lucide="info"></i><p>Alexa dispone de un tiempo limitado para responder. Un nivel rápido ayuda a aprovecharlo.</p></div>
+                  </div>
                 </section>
                 <section id="panel-prompt" class="settings-panel hidden" aria-labelledby="prompt-title">
-                  <div class="section-heading"><span class="section-number">02</span><div><h2 id="prompt-title">La voz de tu asistente</h2><p>Define cómo debe responder AlexIA.</p></div></div>
-                  <div class="field mt-6"><div class="label-row"><label for="metaprompt">Metaprompt</label><span id="prompt-count" class="hint">0 caracteres</span></div><textarea id="metaprompt" rows="13" maxlength="16384" spellcheck="true" required aria-describedby="prompt-help"></textarea><p id="prompt-help" class="hint">Describe idioma, tono y extensión. Las instrucciones se procesan antes de recibir tu pregunta.</p></div>
-                  <div class="inline-note"><span aria-hidden="true">≡</span><p>Se guarda en <code>prompts/meta-prompt.txt</code>. No necesitas recompilar ni reiniciar para cambiarlo.</p></div>
+                  <div class="card panel-card prompt-card motion-item">
+                    <div class="section-heading"><div class="section-icon"><i data-lucide="file-text"></i></div><div><h2 id="prompt-title">Dale personalidad</h2><p>Las instrucciones detrás de su voz.</p></div><span class="micro-badge">SYSTEM PROMPT</span></div>
+                    <div class="prompt-toolbar"><span><span class="file-dot"></span> meta-prompt.txt</span><span id="prompt-count">0 caracteres</span></div>
+                    <label class="sr-only" for="metaprompt">Metaprompt</label><textarea id="metaprompt" rows="14" maxlength="16384" spellcheck="true" required aria-describedby="prompt-help"></textarea>
+                    <div class="prompt-footer"><span><i data-lucide="shield-check"></i> Se prepara antes de tu pregunta</span><span>TEXTO PLANO</span></div>
+                    <p id="prompt-help" class="hint">Se guarda en tu equipo y se aplica sin recompilar. Evita incluir contraseñas o datos privados.</p>
+                  </div>
+                  <div class="card prompt-recipes motion-item"><div><i data-lucide="sparkles"></i><h3>Pequeñas instrucciones. Grandes cambios.</h3></div><p>Añade una indicación al editor y ajústala a tu estilo.</p><div class="recipe-buttons"><button type="button" data-prompt-recipe="Responde con una sola frase de máximo 25 palabras."><i data-lucide="plus"></i> Respuestas breves</button><button type="button" data-prompt-recipe="Usa un tono natural, cercano y directo."><i data-lucide="plus"></i> Tono cercano</button><button type="button" data-prompt-recipe="Si no sabes la respuesta, dilo sin inventar."><i data-lucide="plus"></i> Sin inventar</button></div></div>
                 </section>
                 <section id="panel-environment" class="settings-panel hidden" aria-labelledby="environment-title">
-                  <div class="section-heading"><span class="section-number">03</span><div><h2 id="environment-title">Variables de entorno</h2><p>Conexiones, puertos y ajustes del servicio.</p></div></div>
-                  <p class="environment-help">Los secretos guardados se ocultan. Déjalos vacíos para conservar su valor; escribe uno nuevo solo para reemplazarlo.</p>
-                  <div id="environment-fields" class="environment-fields"></div>
-                  <div class="add-variable"><label class="sr-only" for="new-key">Nombre de la nueva variable</label><input id="new-key" placeholder="NUEVA_VARIABLE" spellcheck="false" autocomplete="off" /><button type="button" id="add-variable" class="button secondary">+ Agregar variable</button></div>
+                  <div class="card panel-card environment-card motion-item">
+                    <div class="section-heading"><div class="section-icon"><i data-lucide="terminal"></i></div><div><h2 id="environment-title">Bajo el capó</h2><p>Variables que conectan todas las piezas.</p></div><button type="button" id="open-variable" class="button secondary small"><i data-lucide="plus"></i> Añadir</button></div>
+                    <div class="env-search input-wrap"><i data-lucide="search"></i><input id="env-search" type="search" placeholder="Buscar una variable…" aria-label="Buscar variables de entorno" autocomplete="off" /><span id="env-count" class="search-count"></span></div>
+                    <div class="env-table-heading"><span>VARIABLE</span><span>VALOR</span></div><div id="environment-fields" class="environment-fields"></div><p id="env-empty" class="env-empty hidden">No encontramos variables con ese nombre.</p>
+                    <div class="quiet-note"><i data-lucide="shield-check"></i><p>Los secretos se mantienen ocultos. Deja el campo vacío para conservar el valor guardado.</p></div>
+                  </div>
                 </section>
                 <section id="panel-integrations" class="settings-panel hidden" aria-labelledby="integrations-title">
-                  <div class="section-heading"><span class="section-number">04</span><div><h2 id="integrations-title">Integraciones</h2><p>Las aplicaciones que podrás conectar a tu asistente.</p></div></div>
-                  <div class="integration-list">
-                    <button type="button" id="open-github" class="integration-button" aria-haspopup="dialog" aria-controls="github-modal">
-                      <img src="/github-mark.png" width="24" height="24" alt="" />
-                      <span>GitHub</span>
-                    </button>
+                  <div class="card panel-card integrations-card motion-item"><div class="section-heading"><div class="section-icon"><i data-lucide="plug"></i></div><div><h2 id="integrations-title">Más posibilidades</h2><p>Tus herramientas, en la misma conversación.</p></div><span class="micro-badge">APLICACIONES</span></div>
+                    <div class="integration-list"><button type="button" id="open-github" class="integration-button" aria-haspopup="dialog" aria-controls="github-modal"><span class="github-icon"><img src="/github-mark.png" width="27" height="27" alt="" /></span><span><strong>GitHub</strong><small>Sin conectar</small></span><i data-lucide="arrow-up-right"></i></button></div>
+                    <div class="integration-foot"><span class="tiny-dot"></span>Elige una aplicación para ver las opciones de conexión.</div>
                   </div>
+                  <div class="integration-explainer motion-item"><span class="explainer-icon"><i data-lucide="cable"></i></span><div><h3>Un espacio para tus conexiones</h3><p>Las integraciones se añadirán aquí a medida que estén disponibles. Tú eliges qué conectar.</p></div></div>
                 </section>
               </div>
               <aside class="context-column" aria-label="Estado del asistente">
-                <div class="context-card"><span class="context-icon" aria-hidden="true">◉</span><h2>Listo para escuchar</h2><p>Abre tu asistente con la voz y haz tu pregunta.</p><blockquote>“Alexa, abre mi asistente”</blockquote><div class="context-divider"></div><div class="detail"><span>Respuesta</span><strong>Automática</strong></div><div class="detail"><span>Al terminar</span><strong>Cierra la sesión</strong></div></div>
-                <div class="connection-card"><h3>Conexiones locales</h3><dl><div><dt>Interfaz web</dt><dd id="ui-address">—</dd></div><div><dt>Servicio Alexa</dt><dd id="backend-address">—</dd></div></dl><p>El túnel de Alexa debe apuntar al servicio, no a esta interfaz.</p></div>
+                <div class="card assistant-card motion-item"><div class="assistant-card-heading"><span>ASISTENTE DE VOZ</span><span class="local-pill">LOCAL</span></div><div class="voice-visual" aria-hidden="true"><div class="orb-ring ring-one"></div><div class="orb-ring ring-two"></div><div class="voice-orb"><i data-lucide="audio-lines"></i></div><span class="orb-dot dot-one"></span><span class="orb-dot dot-two"></span></div><h2 id="assistant-status-title">Tu asistente está aquí.</h2><p id="assistant-status-description">Comprobando la conexión del servicio…</p><div class="invocation"><i data-lucide="mic"></i><span>“Alexa, abre mi asistente”</span></div><div class="assistant-details"><div><span><i data-lucide="message-circle"></i>Respuesta</span><strong>Automática</strong></div><div><span><i data-lucide="circle-check"></i>Al terminar</span><strong>Cierra la sesión</strong></div></div></div>
+                <div class="card connection-card motion-item"><div class="compact-heading"><i data-lucide="network"></i><h3>Todo en su sitio</h3></div><dl><div><dt><span class="endpoint-dot"></span>Interfaz web</dt><dd id="ui-address">—</dd></div><div><dt><span class="endpoint-dot muted"></span>Servicio Alexa</dt><dd id="backend-address">—</dd></div></dl><p><i data-lucide="lock-keyhole"></i>Tu panel de control no se publica por el túnel de Alexa.</p></div>
+                <div class="workspace-caption"><i data-lucide="command"></i><span>Un comando para ponerlo todo en marcha.</span><code>cargo run</code></div>
               </aside>
             </div>
           </fieldset>
-          <footer class="save-bar"><div class="save-state"><span id="dirty-dot" class="saved-dot"></span><span id="save-state">Cargando configuración…</span></div><div class="save-actions"><button type="button" id="reload" class="button secondary">Descartar cambios</button><button type="submit" id="save" class="button primary" disabled><span id="save-label">Guardar y aplicar</span><span aria-hidden="true">↗</span></button></div></footer>
+          <footer class="save-bar"><div class="save-state"><span id="dirty-dot" class="saved-dot"></span><div><strong id="save-state">Cargando configuración…</strong><span id="save-state-hint">Los cambios solo se aplican al guardar.</span></div></div><div class="save-actions"><button type="button" id="reload" class="button ghost"><i data-lucide="rotate-ccw"></i> Descartar</button><button type="submit" id="save" class="button primary" disabled><i data-lucide="check"></i><span id="save-label">Guardar cambios</span></button></div></footer>
         </form>
-        <p class="footnote">Hecho para hablar menos con la configuración y más con tu asistente.</p>
+        <footer class="workspace-footer"><span>AlexIA <span>—</span> Hecho para conversar.</span><span>Tu espacio. Tu control.<i data-lucide="arrow-up-right"></i></span></footer>
       </main>
     </div>
   </div>
-  <dialog id="github-modal" class="integration-modal" aria-labelledby="github-modal-title" aria-describedby="github-modal-description">
-    <div class="modal-heading">
-      <img src="/github-mark.png" width="40" height="40" alt="" />
-      <div><h2 id="github-modal-title">Conectar GitHub</h2><p>Integración con tu asistente</p></div>
-      <button type="button" id="close-github" class="modal-close" aria-label="Cerrar modal">×</button>
-    </div>
-    <p id="github-modal-description">Conecta tus proyectos para consultar repositorios y pull requests desde AlexIA.</p>
-    <div class="modal-planned"><span class="integration-badge">PRÓXIMAMENTE</span><p>La conexión con GitHub estará disponible en una próxima versión. Todavía no se solicitan permisos ni se accede a tu cuenta.</p></div>
-    <div class="modal-actions"><button type="button" id="cancel-github" class="button secondary">Cerrar</button><button type="button" class="button primary" disabled>Conectar GitHub ↗</button></div>
+  <dialog id="github-modal" class="modal integration-modal" aria-labelledby="github-modal-title" aria-describedby="github-modal-description">
+    <div class="modal-topline"><span class="micro-badge">NUEVA CONEXIÓN</span><button type="button" id="close-github" class="icon-button" aria-label="Cerrar modal"><i data-lucide="x"></i></button></div>
+    <div class="connection-art" aria-hidden="true"><span class="modal-app-logo"><i data-lucide="audio-lines"></i></span><span class="connect-dashes"><i data-lucide="plus"></i></span><span class="modal-github-logo"><img src="/github-mark.png" width="34" height="34" alt="" /></span></div>
+    <h2 id="github-modal-title">Un puente con GitHub.</h2><p id="github-modal-description">Tus proyectos y pull requests, a una conversación de distancia.</p>
+    <div class="modal-info"><i data-lucide="clock-3"></i><div><strong>Estamos preparando esta conexión</strong><p>Estará disponible en una próxima versión. Todavía no solicitamos permisos ni accedemos a tu cuenta.</p></div></div>
+    <div class="modal-actions"><button type="button" id="cancel-github" class="button secondary">Entendido</button><button type="button" class="button primary" disabled>Conectar GitHub<i data-lucide="arrow-up-right"></i></button></div>
+    <p class="modal-security"><i data-lucide="shield-check"></i>Siempre tendrás el control de lo que conectas.</p>
   </dialog>
+  <dialog id="variable-modal" class="modal" aria-labelledby="variable-modal-title" aria-describedby="variable-modal-description"><div class="modal-topline"><span class="micro-badge">ENTORNO</span><button type="button" class="icon-button" data-close-dialog="variable-modal" aria-label="Cerrar nueva variable"><i data-lucide="x"></i></button></div><div class="modal-symbol"><i data-lucide="terminal"></i></div><h2 id="variable-modal-title">Una nueva variable.</h2><p id="variable-modal-description">Se añadirá al editor. Guárdala con el resto de tus cambios.</p><div class="field"><label for="new-key">Nombre de la variable</label><input id="new-key" placeholder="MI_VARIABLE" spellcheck="false" autocomplete="off" maxlength="80" /><p id="variable-error" class="field-error hidden" role="alert"></p></div><div class="modal-actions"><button type="button" class="button secondary" data-close-dialog="variable-modal">Cancelar</button><button type="button" id="add-variable" class="button primary"><i data-lucide="plus"></i>Añadir variable</button></div></dialog>
+  <dialog id="discard-modal" class="modal" aria-labelledby="discard-modal-title" aria-describedby="discard-modal-description"><div class="modal-topline"><span class="micro-badge">CAMBIOS SIN GUARDAR</span><button type="button" class="icon-button" data-close-dialog="discard-modal" aria-label="Cerrar confirmación"><i data-lucide="x"></i></button></div><div class="modal-symbol warning-symbol"><i data-lucide="rotate-ccw"></i></div><h2 id="discard-modal-title">¿Volver a lo guardado?</h2><p id="discard-modal-description">Se descartarán las ediciones que todavía no has guardado en esta interfaz.</p><div class="modal-actions"><button type="button" class="button secondary" data-close-dialog="discard-modal">Seguir editando</button><button type="button" id="confirm-discard" class="button primary">Descartar cambios</button></div></dialog>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

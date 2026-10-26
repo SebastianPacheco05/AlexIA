@@ -52,7 +52,20 @@ de sesión true y estado de proveedor ok (2445 ms), sin errores del servicio.
 
 ## Diseño
 
-Panel de ajustes en español: lateral oscuro, superficie clara, acento terracota,
+Rediseño total autorizado 2026-10-25, implementado: consola oscura neutra
+con acento lima, lateral compacto, cabecera de estado, formularios de dos
+columnas y estado contextual integrado. Sustituye la superficie clara y acento
+terracota anteriores. Navegación con iconos Lucide, selección de razonamiento
+visual, editor de prompt amplio, tabla de entorno filtrable y modales nativos
+consistentes. Anime.js gestiona transiciones breves respetando reduced-motion.
+Referencias: composición de Dialog/Sidebar de shadcn, controles de RareUI y
+movimiento de React Bits/Animate UI; no se introduce React ni se afirma usar
+sus componentes. Se usan componentes propios sobre Vite vanilla y Tailwind.
+Conservar contratos de API, privacidad, guardado explícito, GitHub pendiente,
+botón compacto y navegación por teclado. Verificar cada vista, guardado,
+modal, build, consola y Alexa antes de versionar. No mostrar métricas ficticias.
+
+Diseño anterior (sustituido): lateral oscuro, superficie clara, acento terracota,
 formularios con etiquetas persistentes, tipografía del sistema y jerarquía
 compacta. Guardar es la acción principal. Estados de conexión/aplicación y
 errores son texto además de color. En móvil, navegación horizontal y una columna.
@@ -86,3 +99,27 @@ de proveedor. `cargo run` inició ambos puertos. La comprobación de viewport
 móvil no pudo validarse: la herramienta mantuvo el viewport de escritorio.
 Se conserva CSS responsive, sin afirmar verificación visual móvil completada.
 Docker no pudo arrancarse: falta el motor Linux de Docker Desktop.
+
+Rediseño completo: Anime.js 4.5.0 y Lucide 1.61.0 fijados en el lockfile.
+Iconos y movimiento viven en `ui/src/components.js`; estado y persistencia en
+`ui/src/main.js`. Las recetas añaden instrucciones al editor sin guardar por
+su cuenta. Entorno filtra por nombre/descripción, mantiene ocultos los secretos
+y añade variables mediante un diálogo con validación. Descartar ediciones pide
+confirmación; los tres diálogos usan foco modal nativo, Escape y retorno de foco.
+Sin cambio de contratos, puertos ni exposición del panel administrativo.
+
+Verificación del rediseño: build Vite correcto (JS 51,78 kB, gzip 20,69 kB),
+npm audit completo sin vulnerabilidades, navegación de las cuatro vistas,
+receta y guardado real del metaprompt con restauración del original, filtro
+GEMINI (2/12), validación y creación de una variable temporal sin persistir,
+descarte de ediciones y modal GitHub con cierre por Escape y retorno de foco.
+La selección Equilibrado refleja `medium` en Entorno sin guardar. Consola de
+Chrome sin warnings ni errores en la carga final. Alexa respondió «Cuatro más
+cuatro es ocho», `shouldEndSession: true`, proveedor ok en 2132 ms y sin errores
+del servicio durante esa prueba. CSS contempla móvil, pero el override de la
+herramienta sigue devolviendo 1920 px; verificación visual móvil pendiente.
+No se repiten pruebas Rust al no cambiar backend ni sus contratos.
+
+Fuentes del rediseño: [Anime.js](https://animejs.com/documentation/animation),
+[Lucide](https://lucide.dev/guide/packages/lucide),
+[Dialog de shadcn](https://ui.shadcn.com/docs/components/dialog).
