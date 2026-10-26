@@ -1,5 +1,12 @@
 # AlexIA — Backend
 
+2026-10-25, administración local ampliada: `GET /api/tunnel` devuelve
+`{endpoint: string|null}` con la URL quick tunnel validada y `/alexa`, sin
+mutar ajustes. Usa las mismas guardas de Host, Origin, marcador local y rechazo
+de proxy que `/api/settings`; no existe en el router público. Lee latidos
+efímeros de `target/tunnels/` con caducidad y puerto del listener activo.
+El detalle del protocolo con el lanzador vive en [UI.md](UI.md#diseño).
+
 Fecha: 2026-10-23. Diseño aprobado; diferenciar siempre objetivo y código actual. Alcance y versiones: [ARCHITECTURE.md](ARCHITECTURE.md). Operación: [INFRASTRUCTURE.md](INFRASTRUCTURE.md). Entrega: [DEPLOY.md](DEPLOY.md).
 
 ## Base y límites actuales

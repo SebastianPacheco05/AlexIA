@@ -198,6 +198,7 @@ fn resolve(root: &Path, value: &str, default: &str) -> PathBuf {
 pub fn admin_router(control: Arc<Control>) -> Router {
     Router::new()
         .route("/api/settings", get(read_settings).put(save_settings))
+        .route("/api/tunnel", get(read_tunnel))
         .layer(DefaultBodyLimit::max(128 * 1024))
         .layer(middleware::from_fn_with_state(control.clone(), local_only))
         .with_state(control)
@@ -205,6 +206,9 @@ pub fn admin_router(control: Arc<Control>) -> Router {
 
 async fn read_settings(State(control): State<Arc<Control>>) -> Result<Json<View>, ApiError> {
     control.view().await.map(Json)
+}
+async fn read_tunnel(State(control): State<Arc<Control>>) -> Json<serde_json::Value> {
+    Json(serde_json::json!({"endpoint": crate::tunnel::endpoint(control.repository.root(), control.backend_addr.port())}))
 }
 async fn save_settings(
     State(control): State<Arc<Control>>,
@@ -325,6 +329,16 @@ mod tests {
                 .status(),
             StatusCode::NOT_FOUND
         );
+        let request = axum::http::Request::get("/api/tunnel")
+            .body(axum::body::Body::empty()).unwrap();
+        assert_eq!(public_router(control.clone()).oneshot(request).await.unwrap().status(), StatusCode::NOT_FOUND);
+        let request = axum::http::Request::get("/api/tunnel")
+            .header("host", "127.0.0.1:45679").header("x-alexia-ui", "1")
+            .body(axum::body::Body::empty()).unwrap();
+        let response = admin_router(control.clone()).oneshot(request).await.unwrap();
+        assert_eq!(response.status(), StatusCode::OK);
+        let tunnel_body = axum::body::to_bytes(response.into_body(), 2048).await.unwrap();
+        assert_eq!(serde_json::from_slice::<serde_json::Value>(&tunnel_body).unwrap(), serde_json::json!({"endpoint":null}));
         let request = axum::http::Request::get("/api/settings")
             .header("host", "127.0.0.1:45679")
             .header("x-alexia-ui", "1")

@@ -55,6 +55,15 @@ Política de reinicio del proceso, arranque al reiniciar host y health check deb
 
 ## Datos, secretos y observabilidad
 
+2026-10-25, implementado: el lanzador local de Cloudflare conserva metadatos
+efímeros en `target/tunnels/` (excluido de Git), con un registro independiente
+por ejecución. Inicia cloudflared como hijo oculto, mantiene salida en consola,
+renueva el latido cada 2 s y elimina el hijo/registro al cerrar normalmente.
+La UI lee únicamente URL HTTPS validada y puerto coincidente, con caducidad de
+10 s, mediante la API local. Los túneles iniciados con el script anterior deben
+reiniciarse para publicar metadatos; no se provisiona dominio ni túnel permanente.
+El panel continúa en loopback. Contrato y verificación en [UI.md](UI.md).
+
 No incluir claves, cookies, tokens, contraseñas, certificados privados ni conversaciones en Git, imágenes o documentos. Configurar material autorizado en el gestor de secretos del alojamiento o variables protegidas; no pasarlo en comandos visibles ni build args. No crear credenciales para una integración aún no validada. Revisar rotación/revocación cuando se decida autenticación Gemini.
 
 Sesiones RAM expiran y se acotan; no se respaldan. No loguear prompts ni respuestas por defecto. Logs estructurados y métricas agregadas describen duración, resultado, errores y recursos con retención limitada. Cualquier diagnóstico con contenido requiere decisión específica de privacidad y borrado. Métricas aún no implementadas; restringir su exposición y alertar por errores sostenidos, timeouts, RAM y caída del proceso.
