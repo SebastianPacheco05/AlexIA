@@ -81,6 +81,28 @@ Si falla seguridad, mantener o restaurar bloqueo de Alexa. Si falla proveedor, r
 
 ## Criterios por versión
 
+Entrega local 2026-10-25: UI Vite vanilla/Tailwind iniciada junto al backend
+por `cargo run`, UI_PORT=3001 y BIND_ADDR=127.0.0.1:3000. Guardado reversible
+del metaprompt y restauración comprobados en Chrome; consola UI sin warnings
+ni errores. 28 pruebas Rust + 6 Node, build UI y npm audit (0 vulnerabilidades)
+pasaron. Simulador Spanish (US), Development: «pregunta cuánto es dos más dos»
+devolvió «Dos más dos es cuatro», cierre de sesión true, proveedor 2435 ms,
+sin errores del servicio. Túnel reorientado al backend y endpoint actualizado.
+No se creó ningún commit antes de estas comprobaciones. Imagen Docker
+preparada, build pendiente porque el motor Linux de Docker Desktop no está activo.
+No se desplegó en infraestructura remota; configuración Linux de agy pendiente.
+
+Validación local 2026-10-25: `cargo test --locked --target-dir
+target/automatic-response` completó 22 pruebas Rust (13 unitarias y 9 de
+integración), incluida preparación del metaprompt por tuberías reales con CLI
+determinista, respuesta directa, timeout, límites de salida y rechazo sin firma.
+El simulador Spanish (US), Development, devolvió una respuesta real de Gemini
+a «pregunta qué es una estrella» sin segundo comando; el registro agregado del
+proveedor midió 2018 ms, sin incluir verificación ni tránsito de Alexa.
+Servidor actualizado en loopback:3001, túnel existente conservado. La prueba
+inicial sin preparación agotó el presupuesto; se sustituyó por el CLI preparado.
+No se ha probado físicamente el Echo ni desplegado infraestructura nueva.
+
 | Versión | Evidencia necesaria para entrega |
 |---|---|
 | V1 | Puerta Gemini resuelta; controles Alexa completos; conversación/seguimiento/modos reales; sesiones TTL aisladas; PlainText; métricas/health; build y contenedor probados; alojamiento activo y rollback ensayado. |

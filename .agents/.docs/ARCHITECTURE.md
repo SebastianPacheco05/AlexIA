@@ -4,6 +4,9 @@ Fecha: 2026-10-23. Estado: decisiones aprobadas; implementación parcial.
 
 ## Lectura y alcance
 
+Configuración local: [UI.md](UI.md). Imagen y límites de despliegue:
+[DOCKER.md](DOCKER.md). Ambas ampliaciones fueron solicitadas el 2026-10-25.
+
 Este documento define alcance y evolución. [BACKEND.md](BACKEND.md) especifica contratos y voz; [INFRASTRUCTURE.md](INFRASTRUCTURE.md), recursos y operación; [DEPLOY.md](DEPLOY.md), validación y despliegue. Los cuatro viven en `.agents/.docs/`, con estos nombres exactos. Los documentos futuros deben enlazarse desde los existentes cuando corresponda.
 
 AlexIA permite conversar por voz mediante una Skill privada Alexa y un backend propio. No sustituye Alexa ni implica afiliación con Amazon o Google. La privacidad de la Skill no elimina la autenticación del endpoint. La disponibilidad de idioma, cuenta, región y dispositivo se comprobará con la cuenta del propietario antes de declarar la experiencia operativa.
@@ -86,5 +89,21 @@ Implementar adaptadores Hermes/OmniRoute u otros tras validar sus contratos, aut
 | Nombre histórico e instrucciones divergentes | Conservar identificadores funcionales; documentar discrepancias y exigir sincronización. |
 
 ## Registro inicial de decisiones
+
+2026-10-25, implementado: interfaz Vite vanilla + Tailwind en `ui/`, iniciada
+junto con Rust mediante `cargo run`. UI_PORT separado de BIND_ADDR; API de
+administración exclusivamente local. `.env` y metaprompt se leen en runtime,
+con guardado y sustitución del proveedor; puertos requieren reinicio. Docker
+multietapa sirve assets compilados en modo static y conserva UI en loopback.
+Sustituye el metaprompt incorporado exclusivamente al binario. Riesgos y
+aceptación en UI.md y DOCKER.md; validación de contenedor pendiente de motor.
+
+2026-10-25, implementado: el propietario sustituye la recuperación manual de
+resultados por respuesta directa en la misma petición Alexa. Presupuesto local
+7 s incluida verificación; timeout cancela la generación. El CLI se prepara
+con el metaprompt antes de recibir preguntas, sin compartir conversaciones de
+usuarios. Motivo: eliminar el segundo comando y el coste de arranque durante la
+consulta. Riesgo: latencia/cuota y coste de memoria de dos procesos CLI; detalles,
+fuentes y aceptación en [BACKEND.md](BACKEND.md#latencia-timeouts-y-errores).
 
 2026-10-23: se documentan las decisiones aprobadas por el propietario y el estado del esqueleto. Acceso Gemini sin clave y facturación: pendiente de validación. Hermes/OmniRoute: preparación de interfaz aprobada, integración pendiente. Hosting concreto y presupuesto económico: pendientes. Cambios posteriores registrarán fecha, motivo, impacto, documentos afectados y pruebas; conservar el historial de decisiones sustituidas.

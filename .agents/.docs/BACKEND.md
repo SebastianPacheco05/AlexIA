@@ -4,6 +4,15 @@ Fecha: 2026-10-23. Diseño aprobado; diferenciar siempre objetivo y código actu
 
 ## Base y límites actuales
 
+Actualización implementada 2026-10-25: `main` lee `settings::Repository` sin
+mutar el entorno del proceso. `.env` prevalece sobre shell; metaprompt runtime
+en `prompts/meta-prompt.txt`. `control` prepara el proveedor antes de persistir
+un cambio y sustituye el servicio mediante RwLock; un fallo conserva el anterior.
+Administración separada del listener Alexa, con Host/Origin locales, rechazo de
+forwarded y cabecera propia contra CSRF; secretos redactados y revisión optimista.
+Contratos actuales y límites en [UI.md](UI.md). El estado del esqueleto que sigue
+se conserva como contexto histórico y queda sustituido en estas capacidades.
+
 `src/main.rs` arranca Tokio y Axum, con cierre por Ctrl+C. `src/config.rs` valida `BIND_ADDR` como IP:puerto no nulo; predeterminado `127.0.0.1:3000`. Serde serializa respuestas. `src/lib.rs` sirve health y bloqueo Alexa. `src/providers/mod.rs` define `LanguageModel: Send + Sync`, `generate(&str)` y un futuro que devuelve `Result<String, ProviderError>`; el único error actual es `NotConfigured`. No hay autenticación Gemini, Reqwest/Rustls, sesiones ni métricas implementadas.
 
 El diseño objetivo mantiene módulos para protocolo Alexa, aplicación/conversación, proveedores y voz. No crear servicios separados ni base de datos para V1. Reutilizar un cliente Reqwest por configuración de transporte, con Rustls cuando proceda, verificación TLS activa y límites de conexiones, respuesta y tiempo. No construir un cliente por consulta.
@@ -57,6 +66,43 @@ Introducir en V1 un almacén en memoria compartido mediante estado Axum. Identid
 TTL por inactividad renovado tras interacción válida; verificar caducidad al leer y limpiar periódicamente. Configurar máximo de sesiones, turnos y bytes; expulsar entradas vencidas y aplicar política acotada al alcanzar capacidad. Evitar bloqueos durante llamadas de red y resolver peticiones concurrentes de la misma sesión con serialización o versionado. Cancelación/fin elimina contexto; una sesión vencida comienza limpia. TTL y límites aún no tienen valores implementados: fijarlos y probarlos antes de V1.
 
 ## Latencia, timeouts y errores
+
+Actualización 2026-10-25. Estado: implementado por solicitud del propietario.
+El endpoint verificado espera `LanguageModel::generate` en la misma petición y
+devuelve la respuesta normalizada en PlainText, sin avisos ni comandos para
+consultar resultados. Sustituye el flujo anterior de tareas en RAM y recuperación
+con «consulta resultado»: se elimina ese almacén y no se retienen respuestas.
+Una generación concurrente, sin cola. Actualización 2026-10-25, implementada por
+petición del propietario: al terminar la respuesta de la consulta, la sesión se
+cierra (`shouldEndSession: true`), sin reprompt. Sustituye la decisión anterior
+de seguir escuchando. Motivo: dejar de escuchar después de contestar; otra
+consulta requiere reabrir la skill. Aceptación: texto final, cierre y ausencia
+de reprompt comprobados juntos en la prueba de respuesta directa.
+El handler dispone de 7 segundos totales, incluida la verificación (máximo 5 s),
+dejando margen frente a los aproximadamente 8 segundos de Alexa. Al vencer el
+presupuesto se cancela el futuro del proveedor y su CLI mediante `kill_on_drop`,
+se libera la concurrencia y se devuelve voz breve de timeout, sin reintento.
+Motivo: respuesta automática sin un segundo comando. Riesgo: el CLI y la red
+deben terminar dentro del presupuesto; no se promete éxito para toda consulta.
+Aceptación: respuesta directa normalizada, timeout con liberación de permiso,
+rechazo de concurrencia y solicitudes sin firma sin invocar al proveedor.
+Referencia: [plazo de Alexa](https://developer.amazon.com/en-US/docs/alexa/custom-skills/progressive-response-api-reference.html),
+consultada el 2026-10-25. La medición real se registra separadamente de las pruebas.
+
+Optimización adicional 2026-10-25, implementada: metaprompt único en
+`prompts/gemini-voice.txt`, incorporado con `include_str!`. El servidor espera
+el evento `init` y un turno de confirmación del metaprompt antes de escuchar
+peticiones; cada pregunta recibe una conversación recién preparada y la consume
+una sola vez. Se prepara una conversación de reserva sin preguntas de usuarios
+mientras se atiende la actual. Máximo dos CLI: uno para la pregunta y otro de
+reserva/preparación; un solo usuario en generación. Solo se acepta el `result`
+con `SUCCESS`, salida total por turno 64 KiB; EOF, JSON inválido o exceso fallan.
+Timeout/cancelación elimina el proceso de la consulta; el reemplazo no recibe
+esa pregunta. La espera de reserva consume el presupuesto HTTP restante.
+La preparación agrega un turno mínimo de modelo por proceso y puede hacer
+fallar el arranque si el CLI o la cuenta no están disponibles. No cambia modelo,
+autenticación ni permisos. La herramienta CLI conserva su propia política de datos.
+Fuente: [streaming oficial de Antigravity](https://antigravity.google/docs/cli/headless#stream-prompts-from-stdin).
 
 Medir verificación, espera de concurrencia, lectura de sesión, proveedor, normalización y tiempo total. Un deadline global domina los timeouts de conexión, certificados y generación; reservar margen de serialización y red. Cancelar trabajo al vencerlo. Contexto y salida acotados, pool de conexiones y proceso siempre activo son prioridades V1. Evitar llamadas remotas dentro de health.
 

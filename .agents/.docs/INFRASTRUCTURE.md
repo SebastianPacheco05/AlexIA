@@ -30,6 +30,23 @@ Sincronizar reloj del host para timestamp y vigencia de certificados; monitoriza
 
 ## Recursos y disponibilidad
 
+Actualización 2026-10-25: `cargo run` gestiona el proceso Vite en UI_PORT
+(3001) y el listener Alexa independiente en BIND_ADDR (3000). El proxy de Vite
+alcanza una API loopback con puerto dinámico, ausente del servidor público.
+UI_MODE=static sirve la UI compilada en el listener administrativo de loopback,
+sin Vite, para la imagen Docker; no amplía acceso de red. El túnel local apunta
+a BIND_ADDR. Docker incluye Node/OpenSSL/tini y usuario no root; instalación y
+sesión Linux de Antigravity pendientes. [DOCKER.md](DOCKER.md) detalla límites.
+
+Actualización 2026-10-25, implementada para uso local: al arrancar se prepara
+Antigravity CLI y se procesa el metaprompt de `prompts/gemini-voice.txt` antes de
+abrir el listener. Cada consulta consume esa conversación y prepara un reemplazo;
+máximo dos CLI (consulta y reserva/preparación), sin preguntas compartidas entre
+usuarios. Motivo: retirar el arranque y las instrucciones del plazo de Alexa.
+Esto aumenta RAM y añade un turno mínimo de preparación por consulta; consumo
+de RAM bajo carga pendiente de medir. Al cerrar el servidor, `kill_on_drop`
+cierra los procesos del adaptador. No se modificó el túnel ni infraestructura.
+
 Configurar memoria, CPU, concurrencia, tamaño de cuerpo, límite de respuesta upstream y TTL antes de la entrega V1. Medir consumo bajo carga y dejar margen; no inventar una capacidad sin ensayo. Rechazar carga excedente de forma controlada en vez de crecer sin límite.
 
 Conexiones HTTP reutilizadas, timeouts por etapa y deadline global reducen trabajo retenido. Ajustar pools y concurrencia conjuntamente: un pool no es un límite de peticiones. En shutdown dejar de aceptar tráfico y acotar drenaje. El código actual maneja Ctrl+C; añadir y probar SIGTERM para operación Linux antes de declarar cierre de contenedor correcto.
