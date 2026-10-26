@@ -1,8 +1,8 @@
 import { animate, stagger } from 'animejs';
-import { createIcons, AudioLines, BrainCircuit, FileText, SlidersHorizontal, Plug, ShieldCheck, Monitor, ChevronRight, Cpu, Sparkles, Check, Box, Zap, Layers, Brain, Info, Plus, Terminal, Search, ArrowUpRight, Cable, Mic, MessageCircle, CircleCheck, Network, LockKeyhole, Command, RotateCcw, X, Clock3 } from 'lucide';
+import { createIcons, AudioLines, BrainCircuit, FileText, SlidersHorizontal, Plug, ShieldCheck, Monitor, ChevronRight, Cpu, Sparkles, Check, Box, Zap, Layers, Brain, Info, Plus, Terminal, Search, ArrowUpRight, Cable, Mic, MessageCircle, CircleCheck, Network, LockKeyhole, Command, RotateCcw, X, Clock3, Copy, Settings2 } from 'lucide';
 
 export function icons() {
-  createIcons({ icons: { AudioLines, BrainCircuit, FileText, SlidersHorizontal, Plug, ShieldCheck, Monitor, ChevronRight, Cpu, Sparkles, Check, Box, Zap, Layers, Brain, Info, Plus, Terminal, Search, ArrowUpRight, Cable, Mic, MessageCircle, CircleCheck, Network, LockKeyhole, Command, RotateCcw, X, Clock3 } });
+  createIcons({ icons: { AudioLines, BrainCircuit, FileText, SlidersHorizontal, Plug, ShieldCheck, Monitor, ChevronRight, Cpu, Sparkles, Check, Box, Zap, Layers, Brain, Info, Plus, Terminal, Search, ArrowUpRight, Cable, Mic, MessageCircle, CircleCheck, Network, LockKeyhole, Command, RotateCcw, X, Clock3, Copy, Settings2 } });
 }
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');

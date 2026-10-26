@@ -14,6 +14,8 @@ pub fn router(control: Arc<Control>, root: PathBuf) -> Router {
     Router::new()
         .route("/", get(index))
         .route("/favicon.svg", get(favicon))
+        .route("/AlexIA.svg", get(brand_logo))
+        .route("/alexa.png", get(alexa_logo))
         .route("/github-mark.png", get(github_mark))
         .route("/assets/{file}", get(asset))
         .with_state(Arc::new(root.join("ui/dist")))
@@ -46,6 +48,12 @@ async fn index(State(root): State<Arc<PathBuf>>) -> Response {
 }
 async fn favicon(State(root): State<Arc<PathBuf>>) -> Response {
     file(&root.join("favicon.svg"), "image/svg+xml")
+}
+async fn brand_logo(State(root): State<Arc<PathBuf>>) -> Response {
+    file(&root.join("AlexIA.svg"), "image/svg+xml")
+}
+async fn alexa_logo(State(root): State<Arc<PathBuf>>) -> Response {
+    file(&root.join("alexa.png"), "image/png")
 }
 async fn github_mark(State(root): State<Arc<PathBuf>>) -> Response {
     file(&root.join("github-mark.png"), "image/png")
@@ -83,6 +91,8 @@ mod tests {
         let root = std::env::temp_dir().join(format!("alexia-static-{}", std::process::id()));
         std::fs::create_dir_all(root.join("ui/dist/assets")).unwrap();
         std::fs::write(root.join("ui/dist/index.html"), "<h1>AlexIA</h1>").unwrap();
+        std::fs::write(root.join("ui/dist/AlexIA.svg"), "<svg></svg>").unwrap();
+        std::fs::write(root.join("ui/dist/alexa.png"), b"test-image").unwrap();
         std::fs::write(root.join("ui/dist/assets/app.js"), "export {};").unwrap();
         std::fs::write(
             root.join(".env"),
@@ -99,6 +109,10 @@ mod tests {
         for (path, host, status) in [
             ("/", "localhost:3001", StatusCode::OK),
             ("/assets/app.js", "localhost:3001", StatusCode::OK),
+            ("/AlexIA.svg", "localhost:3001", StatusCode::OK),
+            ("/alexa.png", "localhost:3001", StatusCode::OK),
+            ("/alexa.png", "evil.example", StatusCode::FORBIDDEN),
+            ("/AlexIA.svg", "evil.example", StatusCode::FORBIDDEN),
             ("/", "evil.example", StatusCode::FORBIDDEN),
             ("/assets/nope.js", "localhost:3001", StatusCode::NOT_FOUND),
         ] {

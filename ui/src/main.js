@@ -1,5 +1,6 @@
 import './style.css';
 import { icons, reveal, setupDialogs } from './components.js';
+import { hasChanges } from './settings-state.js';
 
 const $ = selector => document.querySelector(selector);
 const state = { data: null, values: new Map(), dirty: false, saving: false };
@@ -10,6 +11,7 @@ const pages = {
   prompt: ['Metaprompt', 'Su voz.', 'Tus instrucciones.', 'Define la personalidad y el estilo que acompañan cada respuesta.'],
   environment: ['Entorno', 'Cada pieza.', 'En su lugar.', 'Gestiona la configuración de AlexIA desde un solo espacio.'],
   integrations: ['Integraciones', 'Tus herramientas.', 'Más cerca.', 'Un punto de encuentro para las aplicaciones de tu asistente.'],
+  settings: ['Configuración', 'Tu asistente.', 'Bien conectado.', 'Prepara la conexión de AlexIA con Alexa desde un solo lugar.'],
 };
 const labels = {
   BIND_ADDR: 'Dirección del servicio Alexa · requiere reinicio', UI_HOST: 'Host local de la interfaz · requiere reinicio',
@@ -25,12 +27,14 @@ function notice(message, error = false) {
   $('#notice').classList.toggle('hidden', !message);
   $('#notice').classList.toggle('error', error);
 }
-function dirty(value) {
+function dirty() {
+  const value = hasChanges(state.data, state.values, $('#metaprompt').value);
   state.dirty = value;
   $('#save-state').textContent = value ? 'Tienes cambios sin guardar' : 'Configuración guardada';
   $('#save-state-hint').textContent = value ? 'Guarda para aplicar tus ajustes al asistente.' : 'Todo está al día. Puedes seguir ajustándolo.';
   $('#dirty-dot').classList.toggle('dirty', value);
   $('#save').disabled = state.saving || !value;
+  $('.save-bar').classList.toggle('hidden', !value && !state.saving);
 }
 async function request(method, body) {
   const response = await fetch('/api/settings', {
@@ -50,7 +54,7 @@ function updateValue(key, value, source) {
     if (input !== source && input.dataset.env === key) input.value = value ?? '';
   });
   if (key === 'GEMINI_LEVEL') syncReasoning();
-  dirty(true);
+  dirty();
 }
 function filterVariables() {
   const query = $('#env-search').value.trim().toLowerCase();
@@ -90,7 +94,7 @@ function render(data) {
   $('#assistant-status-title').textContent = data.status === 'ready' ? 'Lista para escucharte.' : 'Revisemos la conexión.';
   $('#assistant-status-description').textContent = data.status === 'ready' ? 'Tu configuración está cargada. Abre tu asistente y empieza a conversar.' : 'Revisa la configuración del servicio antes de iniciar una conversación.';
   $('#settings-fields').disabled = false;
-  dirty(false);
+  dirty();
   if (data.error) notice(data.error, true);
 }
 async function load() {
@@ -110,7 +114,9 @@ document.querySelectorAll('.nav-item').forEach(button => button.addEventListener
     if (item === button) item.setAttribute('aria-current', 'page'); else item.removeAttribute('aria-current');
   });
   document.querySelectorAll('.settings-panel').forEach(panel => panel.classList.toggle('hidden', panel.id !== `panel-${button.dataset.tab}`));
-  $('.save-bar').classList.toggle('hidden', button.dataset.tab === 'integrations');
+  if (button.dataset.tab === 'environment') {
+    $('#env-search').value = ''; filterVariables();
+  }
   const [breadcrumb, title, accent, description] = pages[button.dataset.tab];
   $('#breadcrumb-current').textContent = breadcrumb;
   const span = document.createElement('span'); span.textContent = accent;
@@ -121,7 +127,7 @@ document.querySelectorAll('.nav-item').forEach(button => button.addEventListener
 document.querySelectorAll('select[data-env], #model').forEach(input => input.addEventListener('input', () => updateValue(input.dataset.env, input.value, input)));
 document.querySelectorAll('[name="reasoning"]').forEach(input => input.addEventListener('change', () => updateValue('GEMINI_LEVEL', input.value, input)));
 $('#env-search').addEventListener('input', filterVariables);
-$('#metaprompt').addEventListener('input', () => { $('#prompt-count').textContent = `${$('#metaprompt').value.length} caracteres`; dirty(true); });
+$('#metaprompt').addEventListener('input', () => { $('#prompt-count').textContent = `${$('#metaprompt').value.length} caracteres`; dirty(); });
 document.querySelectorAll('[data-prompt-recipe]').forEach(button => button.addEventListener('click', () => {
   const editor = $('#metaprompt');
   const addition = `${editor.value.trimEnd() ? '\n\n' : ''}${button.dataset.promptRecipe}`;
@@ -140,7 +146,7 @@ $('#add-variable').addEventListener('click', () => {
   state.values.set(key, ''); $('#environment-fields').append(envField({ key, value: '', secret: true, configured: false }));
   $('#new-key').value = ''; $('#env-search').value = ''; filterVariables();
   $('#variable-modal').addEventListener('close', () => document.getElementById(`env-${key}`)?.focus(), { once: true });
-  $('#variable-modal').close(); dirty(true); notice('');
+  $('#variable-modal').close(); dirty(); notice('');
 });
 $('#new-key').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); $('#add-variable').click(); } });
 $('#settings-form').addEventListener('submit', async event => {
@@ -155,11 +161,53 @@ $('#settings-form').addEventListener('submit', async event => {
     notice(error.name === 'TimeoutError' ? 'El guardado sigue sin confirmarse. Recarga para comprobar el estado antes de reintentar.' : error.message, true);
     $('#settings-fields').disabled = false;
   } finally {
-    state.saving = false; $('#reload').disabled = false; $('#save-label').textContent = 'Guardar cambios'; $('#save').disabled = !state.dirty;
+    state.saving = false; $('#reload').disabled = false; $('#save-label').textContent = 'Guardar cambios'; dirty();
   }
 });
 window.addEventListener('beforeunload', event => { if (state.dirty || state.saving) { event.preventDefault(); event.returnValue = ''; } });
 $('#open-github').addEventListener('click', () => openDialog('github-modal', $('#open-github')));
 $('#close-github').addEventListener('click', () => $('#github-modal').close());
 $('#cancel-github').addEventListener('click', () => $('#github-modal').close());
+$('#open-alexa').addEventListener('click', () => { openDialog('alexa-modal', $('#open-alexa')); loadTunnel(); });
+$('#alexa-open-environment').addEventListener('click', () => {
+  $('#alexa-modal').addEventListener('close', () => {
+    const environmentButton = document.querySelector('.nav-item[data-tab="environment"]');
+    environmentButton.click(); environmentButton.focus();
+  }, { once: true });
+  $('#alexa-modal').close();
+});
+
+async function loadTunnel() {
+  try {
+    const response = await fetch('/api/tunnel', { headers: { 'X-Alexia-UI': '1' }, signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error('Túnel no disponible');
+    const { endpoint } = await response.json();
+    $('#tunnel-endpoint').value = endpoint || '';
+    $('#copy-tunnel').disabled = !endpoint;
+    $('#alexa-endpoint').value = endpoint || '';
+    $('#copy-alexa-endpoint').disabled = !endpoint;
+    $('#tunnel-help').textContent = endpoint ? 'Pega esta URL en Amazon Developer → Endpoint → HTTPS.' : 'Inicia scripts/start-tunnel.ps1 para ver la URL.';
+  } catch {
+    $('#tunnel-endpoint').value = '';
+    $('#copy-tunnel').disabled = true;
+    $('#alexa-endpoint').value = '';
+    $('#copy-alexa-endpoint').disabled = true;
+    $('#tunnel-help').textContent = 'No pudimos consultar el túnel. Reintentando…';
+  }
+}
+async function copyTunnel(statusElement) {
+  try {
+    await navigator.clipboard.writeText($('#tunnel-endpoint').value);
+    statusElement.textContent = 'Endpoint copiado, incluido /alexa.';
+  } catch {
+    const input = $('#alexa-modal').open ? $('#alexa-endpoint') : $('#tunnel-endpoint');
+    input.focus(); input.select();
+    statusElement.textContent = 'Copia el texto seleccionado con Ctrl+C.';
+  }
+}
+$('#copy-tunnel').addEventListener('click', () => copyTunnel($('#tunnel-help')));
+$('#copy-alexa-endpoint').addEventListener('click', () => copyTunnel($('#alexa-copy-status')));
+loadTunnel();
+window.setInterval(() => { if (!document.hidden) loadTunnel(); }, 5000);
+window.addEventListener('focus', loadTunnel);
 load().then(() => reveal($('.workspace-grid')));
