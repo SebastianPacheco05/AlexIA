@@ -6,6 +6,7 @@ pub mod settings;
 pub mod control;
 pub mod ui_process;
 pub mod static_ui;
+pub mod tunnel;
 
 use alexa::service::AlexaService;
 use axum::{

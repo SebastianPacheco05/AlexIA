@@ -90,6 +90,13 @@ Implementar adaptadores Hermes/OmniRoute u otros tras validar sus contratos, aut
 
 ## Registro inicial de decisiones
 
+2026-10-25, aprobado e incorporado al frontend: Anime.js 4.5.0 para
+transiciones y Lucide 1.61.0 para iconos, con versiones exactas en npm.
+Motivo: el propietario solicita renovar todos los componentes visuales.
+Se conserva Vite vanilla y Tailwind; no se añade React ni dependencias del
+backend. npm audit completo: cero vulnerabilidades. Movimiento opcional según
+preferencia del sistema. Implementación y validación visual en [UI.md](UI.md).
+
 2026-10-25, implementado: interfaz Vite vanilla + Tailwind en `ui/`, iniciada
 junto con Rust mediante `cargo run`. UI_PORT separado de BIND_ADDR; API de
 administración exclusivamente local. `.env` y metaprompt se leen en runtime,
