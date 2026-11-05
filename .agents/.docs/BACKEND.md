@@ -1,5 +1,48 @@
 # AlexIA — Backend
 
+2026-11-03, implementado: desconexión registra revoked y
+last_error=disconnect_cleanup_pending antes de cancelar trabajos/borrar la
+credencial. Solo limpia last_error tras completar ambas operaciones y persistir
+el resultado. Permite reintentar sin reabrir acceso; begin_device rechaza nueva
+autorización mientras quede limpieza pendiente. El catálogo conserva revoked
+aunque la fecha del token haya caducado. Registros anteriores siguen siendo
+compatibles, sin nuevo campo de almacenamiento. Motivo: deshabilitar la acción
+de desconexión terminada sin ocultar fallos recuperables del vault/journal.
+Prueba de regresión: fallo sintético de borrado, acceso/vínculo revocados,
+reautorización bloqueada, reintento exitoso y estado conservado al reabrir journal.
+
+2026-11-03: el catálogo GitHub incluye authorization_flow_version=2. La UI detecta
+un backend anterior aún activo tras HMR y requiere reiniciar el lanzador antes
+de permitir otra autorización. Evita repetir OAuth contra el binario antiguo que
+descartaba el token sin instalación. No existe migración por lectura de secretos.
+
+2026-11-03, corregido GitHub: autorización humana e instalación se validan por
+separado. OAuth válido sin instalación conserva el user token en el vault y la
+identidad con estado configured_unverified/last_error=app_installation_required;
+no habilita repositorios/jobs. Verify comprueba también GET /user/installations
+para la App exacta y conecta tras instalarla. Errores previos se conservan en
+last_error (campo opcional compatible con registros anteriores). Sin identidad
+guardada, verificar devuelve github_authorization_incomplete o el requisito de
+instalación conocido antes de intentar leer un token inexistente. No se registran
+tokens ni respuestas OAuth. Pruebas HTTP con identidad/instalación sintéticas.
+
+2026-11-03, implementado parcialmente: `src/integrations/routes.rs` añade sesión
+bootstrap/reanudación, catálogo/conexión/verificación/desconexión GitHub,
+repositorios/vínculo Alexa y jobs/listado/detalle/cancel/input al listener local.
+Las rutas nuevas de acciones exigen cookie HttpOnly/SameSite Strict y CSRF,
+además de las guardas Host/Origin/marcador/forwarded existentes. Sesiones RAM
+8 h, bootstrap de un uso/10 min; las rutas de settings conservan su contrato.
+El router público no expone administración. No hay endpoint de artefactos.
+
+CommandService encola sin búsqueda remota dentro de Alexa; intents de creación,
+merge y resultado solo admiten skill/user explícitamente vinculados. Consulta
+directa/firma/certificado/timestamp conservados. Readiness real: selección y
+diagnóstico; sin POST de PR/PATCH de base/PUT de merge mientras sus guardas no
+estén demostradas. Modelo de interacción entregado, no instalado en Amazon.
+Gate puro y CI de lectura no acreditan todavía todos los requisitos del merge.
+Contratos observados, límites, recuperación y pendientes en
+[el tracker](../../docs/integrations_plan/evidence/IMPLEMENTACION-PLAN00-PLAN01.md).
+
 2026-10-25, administración local ampliada: `GET /api/tunnel` devuelve
 `{endpoint: string|null}` con la URL quick tunnel validada y `/alexa`, sin
 mutar ajustes. Usa las mismas guardas de Host, Origin, marcador local y rechazo
@@ -120,3 +163,63 @@ No reintentar indiscriminadamente generación: puede duplicar uso o gasto. Un re
 Caché de respuestas: opcional V1.1, apagada por defecto. Omitir consultas personales, contextuales o sensibles; incluir proveedor/modelo, versión del prompt, idioma y modo en la clave, además de la consulta elegible. TTL, tamaño y expulsión obligatorios. No compartir respuestas de una conversación entre usuarios ni almacenar errores como respuestas válidas. Medir hit rate y beneficio antes de activarla. Esta caché es distinta de reutilización de conexiones, sesiones y certificados.
 
 Aceptación backend V1: pruebas negativas Alexa sin llamada al proveedor; contrato real Gemini tras validar acceso; follow-up y modos; expiración/aislamiento/concurrencia de sesiones; normalización final en todos los caminos; timeout con cancelación; health local y métricas sin contenido. V1.1 demuestra mejora y aislamiento de caché; V2 pasa la misma batería de contratos para cada adaptador. Las pruebas actuales solo cubren el esqueleto descrito, no estos criterios futuros.
+
+
+## 2026-11-03 — Contrato propuesto de trabajos GitHub por voz, R2
+
+Estado: **propuesto; no implementado**. Fuente de requisitos y detalle técnico:
+[PLAN01 R2](../../docs/integrations_plan/PLAN01-GITHUB.md). El propietario confirmó
+creación desde última rama subida sin PR y solicitó squash merge a rama indicada
+cuando se cumpla el contrato de tests. Esta solicitud sustituye la exclusión
+inicial de merge para ese conector, sin habilitar infraestructura ni cuentas.
+
+Intents nuevos propuestos: CrearUltimaPrIntent, MergeUltimaPrIntent con slot Rama
+y ResultadoGithubIntent de soporte. LaunchRequest ofrece las dos operaciones
+dentro de la skill con nombre solicitado «mi agente»; el nombre y locale se
+verifican en Amazon. No cambiar la palabra de activación del dispositivo desde
+el backend. PreguntarIntent conserva su respuesta directa vigente.
+
+Cada orden GitHub verifica la petición Alexa y el vínculo de usuario antes de
+resolver recursos. El handler acusa y cierra sesión dentro del presupuesto actual;
+análisis y espera de CI se ejecutan como trabajos. No mantener una petición abierta
+durante CI ni prometer voz espontánea al terminar. Cuenta GitHub humana por ID
+estable y user access token; la instalación de App por sí sola no identifica al
+hablante. PR bot requiere recibo verificable para ese principal.
+
+Antigravity lee snapshot autorizado y devuelve título/body estructurados; no hereda
+tokens GitHub ni decide permisos. El contrato técnico futuro debe separarse del
+prompt breve y límite de 4.000 caracteres de la consulta de voz actual. Rust valida
+y publica. Checks/statuses/Actions alimentan un gate por head, base y fuentes de
+tests esperadas. Cambios de snapshot invalidan evidencia previa; seguimiento de
+head solo bajo grant explícito para la misma PR/destino y plazo acotado.
+
+No se modificó src/alexa/service.rs, el proveedor, routers ni modelo Amazon en esta
+revisión. Las pruebas futuras, efectos, límites y recuperación viven en PLAN01 y
+[PLAN05](../../docs/integrations_plan/PLAN05-GITHUB-ACTIONS.md); no interpretar estos
+contratos como endpoints/intents existentes.
+
+
+## 2026-11-03 — Contratos comunes corregidos por auditoría C1
+
+Estado: **propuesto; no implementado**. PLAN00 es fuente canónica de estados/API;
+PLAN01 concreta las operaciones GitHub. Se incorpora una variante selection de job,
+acotada a conexión/usuario y sin efectos, que permite acusar la orden Alexa antes
+de enumerar repositorios. El CommandService recibe principal verificado internamente,
+sin simular cookie/cabecera de la UI. Después de seleccionar se registra ProjectRef
+real, se revalida grant y se crea hijo execution, consultable por el padre.
+
+Idempotencia: digest es dato de comparación y no componente de la clave única.
+Una orden repetida conserva selección/hijos/recibos. Estados waiting_for_input y
+waiting_for_external, stage y result_code se separan; continuation_id se liga a
+principal/revisión/TTL. Snapshot es default; follow_ref solo por configuración explícita.
+
+Antes de escritura externa se requiere journal durable EffectIntent y reconciliación
+tras caída/cancelación. Procedencia de PR bot no expira con el reporte de 24 h.
+Las credenciales se guardan por rol y la desconexión de un usuario no revoca a otros.
+No habilitar retarget/merge automático con destination_guard_status unverified;
+los controles server-side/operativos suficientes se deben demostrar, sin confundir
+sha de head con precondición de base. Ver
+[hallazgos y condiciones de salida](../../docs/integrations_plan/evidence/PLAN00-GITHUB-CONSISTENCIA.md).
+
+La revisión comprobó documentos y grafo, no ejecutó operaciones remotas ni cambió
+los handlers existentes. La validación Playwright histórica no prueba estos flujos.

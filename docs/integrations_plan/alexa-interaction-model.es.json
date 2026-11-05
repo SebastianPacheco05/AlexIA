@@ -1,0 +1,18 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "mi agente",
+      "intents": [
+        { "name": "CrearUltimaPrIntent", "slots": [], "samples": ["crea la última PR subida", "crea una PR de mi última rama", "crea mi última pull request"] },
+        { "name": "MergeUltimaPrIntent", "slots": [{ "name": "Rama", "type": "RAMAS_AUTORIZADAS" }], "samples": ["haz merge a la rama {Rama}", "haz merge con la rama {Rama}", "fusiona mi última PR con {Rama}"] },
+        { "name": "ResultadoGithubIntent", "slots": [], "samples": ["consulta el resultado de GitHub", "cómo va la PR"] },
+        { "name": "PreguntarIntent", "slots": [{ "name": "pregunta", "type": "AMAZON.SearchQuery" }], "samples": ["pregunta {pregunta}"] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] }
+      ],
+      "types": [{ "name": "RAMAS_AUTORIZADAS", "values": [{ "name": { "value": "desarrollo" } }, { "name": { "value": "main" } }] }]
+    }
+  }
+}

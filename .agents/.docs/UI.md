@@ -1,5 +1,70 @@
 # AlexIA — Configuración local
 
+2026-11-03, implementado por solicitud del propietario: modal GitHub rediseñado
+con cabecera compacta, cuerpo desplazable y pie siempre visible; escala de
+espaciado 8/16/20/24, campos agrupados y una columna en móvil. Mantiene diálogo
+nativo, etiquetas, Escape y foco de retorno. Estado de conexión visible en español;
+«Desconectar» queda deshabilitado sin conexión o tras revocación completada.
+Un fallo de limpieza muestra «Reintentar limpieza» y bloquea nueva autorización
+hasta completarla. Los hipervínculos usan azul; las acciones principales conservan
+verde. Ayuda de registro desplegable y disponibilidad de PR/merge en texto breve,
+sin controles de Alexa en este modal. Referencia visual: lenguaje oscuro, bordes
+y acento existentes de AlexIA; se elimina la ilustración grande para priorizar el
+formulario. Aceptación: desconexión normal inactiva, recuperación explícita y sin
+desbordamiento horizontal en móvil.
+
+Validación de este ajuste: 50 pruebas Rust y 7 pruebas Node correctas; build Vite
+correcto. Chrome mostró estado revocado con Desconectar deshabilitado; después
+se observó una cuenta autorizada pendiente de instalación con Verificar activo.
+Enlaces computados rgb(141,187,255), pie visible y sin desbordamiento horizontal
+en escritorio. El override 390x844 no se aplicó (la herramienta conservó 1920x855);
+CSS móvil implementado, comprobación visual móvil pendiente. La suite Rust requirió
+salir del sandbox por ACL/sockets/archivos temporales; no se debilitaron guardas.
+La primera prueba nueva de reapertura se corrigió para cerrar el journal antes
+de volver a abrirlo. Cambios Rust de limpieza pendientes de reiniciar el lanzador
+que ya estuviera ejecutándose; el frontend se actualiza por Vite.
+
+2026-11-03: la UI detecta authorization_flow_version anterior/missing del backend
+y explica que se requiere reiniciar Rust; HMR solo actualiza frontend. Oculta el
+código de dispositivo al terminar/fallar el flujo y muestra el resultado actual
+en lugar de conservar el mensaje de espera después de un fallo.
+
+2026-11-03, ajuste solicitado: «Vincular mi usuario Alexa» se retira del modal
+GitHub y se ubica en Configuración → Alexa. Conserva identidad/capacidad/API;
+mensajes de guardado y error aparecen en el propio modal Alexa. Guardar vínculo
+se habilita tras desbloquear la sesión y conectar GitHub, sin eliminar controles
+de autorización. El estado de operaciones GitHub permanece en su integración.
+
+2026-11-03, corregido GitHub: el modal distingue cuenta autorizada de App instalada,
+explica errores de autorización/vault en español y no permite verificar cuando
+no existe identidad guardada. Falta de instalación muestra instrucciones para
+instalar y verificar; un fallo antiguo que perdió el token requiere desconectar
+y autorizar de nuevo. GitHub puede pedir crear una private key al preparar una
+App; ese requisito de registro no significa que deba cargarse la clave en AlexIA.
+Los permisos de repositorio se configuran antes de instalar: Contents/Pull requests
+en lectura; Checks/Commit statuses/Actions en lectura para CI. No se modifican
+permisos ni instalaciones de GitHub automáticamente durante diagnóstico.
+
+2026-11-03, corregido: Vite usa `clearScreen: false` para conservar el código
+local de un uso impreso por Rust antes del arranque de la UI. La limpieza por
+defecto de Vite ocultaba ese mensaje al ejecutar `scripts/start-alexa.ps1`.
+Se reprodujo con el logger real en modo TTY: emitía secuencias de borrado antes
+de la corrección y dejó de emitirlas con esta configuración. Reiniciar el
+lanzador genera un código nuevo, visible en la misma terminal, válido 10 min.
+No se añade otra vía para obtener el código ni se debilita la autenticación.
+
+2026-11-03, implementado: modal GitHub con desbloqueo de integraciones por código
+local efímero, BYO App/device flow, verificación/desconexión, repositorio del piloto
+y vínculo Alexa. Panel de tareas con cola fixture rotulada, selección manual,
+diagnóstico y cancelación. Texto externo via textContent. Sin controles de
+publicar/fusionar mientras sus guardas estén pendientes. CSRF solo en RAM del
+frontend; cookie HttpOnly; recarga y dos pestañas probadas. El refresco no reemplaza
+controles de selección si no cambia la revisión. OBS-01 corregida: CRLF/LF se
+normalizan al comparar metaprompt; espacios/cambios reales siguen siendo ediciones.
+Diecisiete comprobaciones Playwright sobre backend real, escritorio/móvil y cero
+errores/warnings finales. OAuth real, simulador y Echo pendientes. Guía y alcance
+en [el tracker](../../docs/integrations_plan/evidence/IMPLEMENTACION-PLAN00-PLAN01.md).
+
 Fecha: 2026-10-25. Estado: implementado y validado localmente.
 
 ## Objetivo y alcance
@@ -189,3 +254,31 @@ al cargar, visible al editar y oculta al restaurar el valor original. Alexa en
 Configuración abre la guía; Abrir Entorno muestra todas las variables. Consola sin
 warnings/errores. Simulador real: «Cinco más cinco es diez», cierre true,
 proveedor ok en 2156 ms y sin errores del servicio. OAuth/SMAPI no implementado.
+
+
+## 2026-11-03 — Validación con Playwright CLI para planes de integración
+
+Estado: **validación ejecutada; observación OBS-01 pendiente de corrección**.
+Como parte de los [planes de integración](../../docs/integrations_plan/PLAN00-BASE-COMUN.md),
+se instaló la skill oficial microsoft/playwright-cli y el ejecutable 0.1.23.
+Se compiló el backend con `cargo build --locked --offline` y la UI con
+`npm --prefix ui run build`. La compilación Rust terminó correctamente con advertencia
+ambiental de hard links de caché; no se modificó código para resolverla.
+
+La prueba usó el binario real en modo static y configuración aislada bajo
+`target/integration-plans/runtime`, backend 4300 y UI 4301, sin ID Alexa ni credenciales
+de proveedor. Completó 41 comprobaciones de UI/API sin mocks, cero errores/warnings
+de consola y cero excepciones JavaScript. Se verificaron escritorio 1440x900 y móvil
+390x844; ancho global móvil 390 sin desbordamiento. Esta evidencia actual complementa
+la limitación histórica de viewport de las entregas anteriores, sin reescribirlas.
+
+OBS-01: con metaprompt CRLF, el textarea normaliza a LF y `hasChanges` compara
+strings diferentes, mostrando la barra de guardado al cargar sin editar. Se reprodujo
+y normalizó únicamente la copia fixture mediante guardado. No se cambió el código
+ni el metaprompt original. Criterio propuesto antes de ampliar catálogo: comparación
+consistente de CRLF/LF que conserve cambios reales y espacios significativos,
+con pruebas de ambas condiciones.
+
+Se verificó mediante SHA-256 que `.env` y `prompts/meta-prompt.txt` originales no
+cambiaron. No se ejecutó consulta IA, firma Amazon real ni Echo físico.
+[Informe, JSON y capturas](../../docs/integrations_plan/evidence/VALIDACION-2026-11-03.md).

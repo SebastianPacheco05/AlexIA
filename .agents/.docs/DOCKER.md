@@ -1,5 +1,11 @@
 # AlexIA — Imagen Docker
 
+2026-11-03: `.alexia-data/` y artefactos de Playwright se excluyen del contexto de
+imagen. El piloto GitHub usa Credential Manager Windows; no existe backend vault
+Linux disponible ni se copia autenticación Windows al contenedor. No declarar la
+conexión GitHub funcional en Docker. Preparación y límites actuales en
+[el tracker](../../docs/integrations_plan/evidence/IMPLEMENTACION-PLAN00-PLAN01.md).
+
 Fecha: 2026-10-25. Estado: preparación para despliegue; no despliegue remoto.
 
 Tres etapas: Vite/Tailwind con Node 24, Rust con Cargo.lock y runtime Node 24

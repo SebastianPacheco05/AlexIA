@@ -22,6 +22,8 @@ use std::{
 use tokio::sync::{Mutex, RwLock};
 
 pub struct Control {
+    pub(crate) sessions: Mutex<crate::auth::Sessions>,
+    pub(crate) commands: Result<Arc<crate::integrations::commands::Commands>, &'static str>,
     repository: Repository,
     active: RwLock<Option<Arc<AlexaService>>>,
     active_document: RwLock<Document>,
@@ -59,7 +61,14 @@ impl Control {
         document.validate()?;
         let backend_addr = document.bind_addr()?;
         let ui_addr = document.ui_addr()?;
+        let (sessions, bootstrap) = crate::auth::Sessions::new(crate::auth::now());
+        let commands =
+            crate::integrations::commands::Commands::open(&repository.root().join(".alexia-data"));
+        // Ephemeral local bootstrap, displayed once to the launching user; never a URL or persistent log.
+        eprintln!("Código local de integraciones (un uso, 10 min): {bootstrap}");
         let control = Arc::new(Self {
+            sessions: Mutex::new(sessions),
+            commands,
             repository,
             active: RwLock::new(None),
             active_document: RwLock::new(document.clone()),
@@ -112,7 +121,11 @@ impl Control {
             .with_gemini_settings(document.get("GEMINI_MODEL"), document.get("GEMINI_LEVEL"))?
             .with_metaprompt(&document.metaprompt)?
             .prewarm().await.map_err(|_| "No se pudo preparar Antigravity. Comprueba el ejecutable, la sesión y la cuota.")?;
-        Ok(Some(Arc::new(AlexaService::new(config, Arc::new(model)))))
+        let mut service = AlexaService::new(config, Arc::new(model));
+        if let Ok(commands) = &self.commands {
+            service = service.with_commands(commands.clone());
+        }
+        Ok(Some(Arc::new(service)))
     }
 
     async fn view(&self) -> Result<View, ApiError> {
@@ -197,6 +210,7 @@ fn resolve(root: &Path, value: &str, default: &str) -> PathBuf {
 
 pub fn admin_router(control: Arc<Control>) -> Router {
     Router::new()
+        .merge(crate::integrations::routes::router(control.clone()))
         .route("/api/settings", get(read_settings).put(save_settings))
         .route("/api/tunnel", get(read_tunnel))
         .layer(DefaultBodyLimit::max(128 * 1024))
@@ -208,7 +222,9 @@ async fn read_settings(State(control): State<Arc<Control>>) -> Result<Json<View>
     control.view().await.map(Json)
 }
 async fn read_tunnel(State(control): State<Arc<Control>>) -> Json<serde_json::Value> {
-    Json(serde_json::json!({"endpoint": crate::tunnel::endpoint(control.repository.root(), control.backend_addr.port())}))
+    Json(
+        serde_json::json!({"endpoint": crate::tunnel::endpoint(control.repository.root(), control.backend_addr.port())}),
+    )
 }
 async fn save_settings(
     State(control): State<Arc<Control>>,
@@ -330,15 +346,33 @@ mod tests {
             StatusCode::NOT_FOUND
         );
         let request = axum::http::Request::get("/api/tunnel")
-            .body(axum::body::Body::empty()).unwrap();
-        assert_eq!(public_router(control.clone()).oneshot(request).await.unwrap().status(), StatusCode::NOT_FOUND);
+            .body(axum::body::Body::empty())
+            .unwrap();
+        assert_eq!(
+            public_router(control.clone())
+                .oneshot(request)
+                .await
+                .unwrap()
+                .status(),
+            StatusCode::NOT_FOUND
+        );
         let request = axum::http::Request::get("/api/tunnel")
-            .header("host", "127.0.0.1:45679").header("x-alexia-ui", "1")
-            .body(axum::body::Body::empty()).unwrap();
-        let response = admin_router(control.clone()).oneshot(request).await.unwrap();
+            .header("host", "127.0.0.1:45679")
+            .header("x-alexia-ui", "1")
+            .body(axum::body::Body::empty())
+            .unwrap();
+        let response = admin_router(control.clone())
+            .oneshot(request)
+            .await
+            .unwrap();
         assert_eq!(response.status(), StatusCode::OK);
-        let tunnel_body = axum::body::to_bytes(response.into_body(), 2048).await.unwrap();
-        assert_eq!(serde_json::from_slice::<serde_json::Value>(&tunnel_body).unwrap(), serde_json::json!({"endpoint":null}));
+        let tunnel_body = axum::body::to_bytes(response.into_body(), 2048)
+            .await
+            .unwrap();
+        assert_eq!(
+            serde_json::from_slice::<serde_json::Value>(&tunnel_body).unwrap(),
+            serde_json::json!({"endpoint":null})
+        );
         let request = axum::http::Request::get("/api/settings")
             .header("host", "127.0.0.1:45679")
             .header("x-alexia-ui", "1")

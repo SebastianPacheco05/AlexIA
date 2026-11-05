@@ -1,10 +1,12 @@
 import './style.css';
 import { icons, reveal, setupDialogs } from './components.js';
 import { hasChanges } from './settings-state.js';
+import { setupIntegrations } from './integrations.js';
 
 const $ = selector => document.querySelector(selector);
 const state = { data: null, values: new Map(), dirty: false, saving: false };
 const openDialog = setupDialogs();
+setupIntegrations();
 icons();
 const pages = {
   provider: ['Inteligencia', 'Un poco de inteligencia.', 'Mucho de ti.', 'Elige cómo piensa tu asistente. Nosotros nos encargamos del resto.'],

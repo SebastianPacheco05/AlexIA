@@ -13,3 +13,5 @@ ui/dist
 .codex
 .alexia-ui-*.tmp
 **/.alexia-ui-*.tmp
+.alexia-data
+.playwright-cli

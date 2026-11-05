@@ -22,7 +22,8 @@ body { margin: 0; }
 button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .45; }
-a { color: inherit; }
+a { color: #8dbbff; }
+a:hover { color: #b5d3ff; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .hidden { display: none !important; }
 .lucide { width: 18px; height: 18px; flex-shrink: 0; stroke-width: 1.65; }
@@ -298,3 +299,98 @@ body:has(dialog[open]) { overflow: hidden; }
   .tunnel-section { margin-top: 12px; padding-top: 12px; }
 }
 @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+.integration-fields { display: grid; gap: 16px; margin-top: 18px; }
+.integration-fields.hidden { display: none; }
+.integration-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.integration-workspace { margin-top: 20px; }
+.integration-workspace .field { margin-top: 16px; }
+.integration-workspace .field button { margin-top: 10px; }
+.integration-fields details { border-top: 1px solid #333b46; padding-top: 14px; }
+.integration-fields summary, .job-item summary { cursor: pointer; font-size: 13px; color: #d4dfc7; }
+.integration-fields a { color: #8dbbff; font-size: 12px; }
+.integration-fields select, .job-item select { width: 100%; min-height: 42px; background: #191e24; color: #e2e9dc; border: 1px solid #424c3b; border-radius: 6px; padding: 10px; }
+.job-item { margin-top: 16px; padding-top: 16px; border-top: 1px solid #333b46; overflow-wrap: anywhere; }
+.job-item strong { font-size: 13px; }
+.job-item p, #jobs-message { font-size: 12px; line-height: 1.8; color: #a1afc2; }
+.job-item pre { max-height: 240px; overflow: auto; white-space: pre-wrap; font-size: 11px; padding: 12px; background: #13171c; }
+.job-item details { margin-top: 12px; }
+.job-item button { margin: 10px 8px 10px 0; }
+#github-modal {
+  --github-border: #333a44;
+  --github-muted: #a3afbf;
+  width: min(600px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  overflow: hidden;
+  border-color: #3b4552;
+}
+#github-modal[open] { display: flex; flex-direction: column; }
+.github-header { flex: none; padding: 20px 28px 24px; border-bottom: 1px solid var(--github-border); }
+.github-eyebrow { color: var(--github-muted); font-size: 10px; font-weight: 600; letter-spacing: 1.6px; }
+.github-heading { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+.github-brand { display: grid; place-items: center; width: 56px; height: 56px; flex: none; border: 1px solid #e0e5ec; border-radius: 12px; background: #f5f7fa; }
+#github-modal h2 { margin: 0 0 6px; font-size: 24px; font-weight: 550; letter-spacing: -.6px; }
+.github-heading p { margin: 0; color: var(--github-muted); font-size: 13px; line-height: 1.6; }
+.github-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 24px 28px; }
+.github-controls { display: grid; gap: 20px; }
+#github-modal .hint { margin: 0; color: var(--github-muted); font-size: 12px; line-height: 1.7; }
+.github-account-section { display: grid; gap: 10px; }
+.github-connection-status { display: inline-flex; align-items: center; justify-self: start; gap: 8px; padding: 6px 10px; border: 1px solid #424b58; border-radius: 6px; color: #c8d1df; background: #20262e; font-size: 11px; font-weight: 550; }
+.github-connection-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #95a0af; }
+.github-connection-status[data-connected="true"] { color: var(--accent); border-color: #475c35; background: #242e20; }
+.github-connection-status[data-connected="true"]::before { background: var(--accent); }
+.github-section { padding: 20px; border: 1px solid var(--github-border); border-radius: 10px; background: #1b2027; }
+.github-form { display: grid; gap: 20px; }
+.github-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.github-section-heading h3 { margin: 0; font-size: 13px; font-weight: 600; }
+.github-step { font-size: 9px; letter-spacing: 1px; color: var(--github-muted); }
+#github-setup > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; list-style: none; cursor: pointer; font-size: 14px; font-weight: 550; }
+#github-setup > summary::-webkit-details-marker { display: none; }
+#github-setup > summary small { display: block; margin-top: 4px; color: var(--github-muted); font-size: 12px; font-weight: 400; }
+#github-setup > summary > .lucide { width: 16px; height: 16px; color: var(--github-muted); transition: transform .15s; }
+#github-setup[open] > summary > .lucide { transform: rotate(90deg); }
+.github-setup-content { padding-top: 20px; margin-top: 16px; border-top: 1px solid var(--github-border); }
+.github-credentials { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 16px; }
+#github-modal .field > label { margin-bottom: 8px; font-size: 12px; }
+#github-modal .field > label span { margin-left: auto; color: var(--github-muted); font-size: 10px; font-weight: 400; }
+#github-modal input, #github-modal select { width: 100%; min-height: 44px; padding: 11px 12px; border: 1px solid #46505f; border-radius: 7px; background: #11151b; color: #e8edf5; font-size: 13px; }
+#github-modal input::placeholder { color: #7e8a9a; }
+#github-modal .field .hint { margin-top: 10px; }
+#github-modal .button { min-height: 40px; margin: 0; }
+#github-modal .github-form > .button { justify-self: start; }
+#github-modal a { color: #8dbbff; text-underline-offset: 3px; }
+#github-modal a:hover { color: #b5d3ff; text-decoration: underline; }
+.github-setup-help { margin: 0; color: var(--github-muted); font-size: 11px; line-height: 1.8; }
+.github-help > summary { cursor: pointer; color: var(--github-muted); font-size: 11px; line-height: 1.6; }
+.github-help[open] > summary { margin-bottom: 12px; }
+.github-setup-help a { display: inline; }
+.github-setup-help .lucide { display: inline; width: 12px; height: 12px; vertical-align: -2px; }
+.github-device { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; border: 1px solid #485e35; border-radius: 10px; background: #242e20; }
+.github-device div > strong { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 550; }
+.github-device a { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 1.6; }
+.github-device a .lucide { width: 13px; height: 13px; }
+#github-user-code { flex: none; padding: 8px 12px; border: 1px solid #536344; border-radius: 6px; background: #151c12; color: var(--accent); font: 600 17px ui-monospace, monospace; letter-spacing: 1px; user-select: all; }
+.github-manage .integration-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }
+#github-modal #disconnect-github { margin-left: auto; }
+.github-capabilities { display: flex; gap: 10px; align-items: flex-start; padding: 0 4px; color: var(--github-muted); }
+.github-capabilities > .lucide { width: 15px; height: 15px; margin-top: 3px; }
+.github-capabilities p { margin: 0; font-size: 11px; line-height: 1.8; }
+#github-message:empty { display: none; }
+#github-modal #github-message { margin-top: 20px; padding: 12px 16px; border-left: 2px solid #80936c; border-radius: 0 6px 6px 0; background: #20272a; color: #d0dfc3; overflow-wrap: anywhere; }
+#github-modal #github-message.field-error { color: #f3bea5; border-color: #b9846b; background: #2c2422; }
+.github-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex: none; padding: 16px 28px; border-top: 1px solid var(--github-border); background: #191e25; }
+.github-footer .modal-security { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--github-muted); font-size: 11px; line-height: 1.6; }
+.github-footer .modal-security .lucide { width: 14px; height: 14px; }
+@media (max-width: 540px) {
+  #github-modal { max-height: calc(100dvh - 24px); width: calc(100vw - 24px); border-radius: 12px; }
+  .github-header { padding: 16px 20px 20px; }
+  .github-body { padding: 20px; }
+  .github-footer { padding: 16px 20px; }
+  .github-section { padding: 16px; }
+  .github-heading { gap: 12px; }
+  #github-modal h2 { font-size: 21px; }
+  .github-credentials { grid-template-columns: 1fr; }
+  .github-device { flex-direction: column; align-items: flex-start; }
+  .github-manage .integration-actions > .button { flex: 1 1 100%; }
+  .github-footer .modal-security { max-width: 180px; }
+}

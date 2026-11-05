@@ -80,6 +80,7 @@ impl AlexaConfig {
 }
 
 pub struct AlexaService {
+    commands: Option<Arc<crate::integrations::commands::Commands>>,
     config: AlexaConfig,
     model: Arc<dyn LanguageModel>,
     verification_slots: Semaphore,
@@ -89,11 +90,17 @@ pub struct AlexaService {
 impl AlexaService {
     pub fn new(config: AlexaConfig, model: Arc<dyn LanguageModel>) -> Self {
         Self {
+            commands: None,
             config,
             model,
             verification_slots: Semaphore::new(2),
             generation_slot: Semaphore::new(1),
         }
+    }
+
+    pub fn with_commands(mut self, commands: Arc<crate::integrations::commands::Commands>) -> Self {
+        self.commands = Some(commands);
+        self
     }
 
     async fn verify(&self, headers: &HeaderMap, body: &str) -> Result<(), ()> {
@@ -165,9 +172,24 @@ impl AlexaService {
             "{}",
             json!({"event":"alexa_request","trace":trace,"type":request_type,"intent":intent,"end_reason":reason})
         );
+        if request["type"] == "IntentRequest" {
+            if let Some(response) = crate::alexa::github_intents::dispatch(
+                self.commands.as_ref(),
+                &self.config.skill_id,
+                envelope,
+            )
+            .await
+            {
+                return response;
+            }
+        }
         match request["type"].as_str() {
             Some("LaunchRequest") => speech(
-                "AlexIA está conectada.",
+                if self.commands.is_some() {
+                    "Puedes hacer una pregunta o consultar GitHub. Por ahora puedo seleccionar ramas y revisar el destino de una PR; publicar y fusionar siguen bloqueados."
+                } else {
+                    "AlexIA está conectada."
+                },
                 false,
             ),
             Some("SessionEndedRequest") => json!({"version":"1.0","response":{}}),

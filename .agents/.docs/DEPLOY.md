@@ -1,5 +1,35 @@
 # AlexIA — Validación y despliegue
 
+2026-11-03, ajuste Alexa/UI y detección de backend antiguo: 49 tests Rust y 6
+tests de estado UI correctos; build Vite y diff correctos. Se comprobó en el
+navegador real que el vínculo aparece en Configuración → Alexa y desaparece de
+GitHub, y que el panel detecta el proceso anterior aún activo. El usuario debe
+reiniciar su lanzador para cargar Rust actualizado; no se interrumpió el proceso
+ni se repitió autorización externa durante esta comprobación.
+
+2026-11-03, corrección de autorización GitHub: 49 pruebas Rust y 5 pruebas de estado
+UI correctas, build Vite y diff correctos. Regresión reproducida antes del cambio:
+OAuth válido sin instalación terminaba antes de guardar el token. Prueba HTTP
+demuestra configured_unverified hasta instalar la App y connected solo tras nueva
+verificación de usuario/instalación. Estado antiguo sin token devuelve instrucción
+de reautorizar antes de leer vault. El usuario debe configurar permisos/instalar
+su App y reiniciar el lanzador para usar el backend corregido; no se hizo esa
+concesión de acceso desde las herramientas durante el diagnóstico.
+
+2026-11-03: piloto PLAN00/PLAN01 preparado para validación local, **sin despliegue**.
+Ejecutar tests Rust con ACL/vault/sockets soportados, pruebas Node, build UI y
+recorrido de navegador con configuración fixture. No interpretar estas pruebas
+como OAuth/GitHub/Amazon reales. No liberar creación/retarget/merge ni sustituir
+sus guardas pendientes por mocks verdes. Estado y evidencia de esta entrega en
+[el tracker](../../docs/integrations_plan/evidence/IMPLEMENTACION-PLAN00-PLAN01.md).
+Para rollback, volver al código anterior y detener jobs; conservar estado privado
+si hay efectos pendientes de reconciliar y revocar conexión desde la versión que
+custodia el token antes de retirar su acceso. No incluir `.alexia-data/` en imagen.
+
+Verificación final: 47 tests Rust y 8 Node correctos; check all-targets, formato de
+Rust afectado, build UI, enlaces y diff correctos; npm audit sin vulnerabilidades.
+17 comprobaciones de UI real correctas. No se probó OAuth remoto ni contenedor.
+
 Fecha: 2026-10-23. Procedimiento propuesto; no implica despliegue realizado. Dependencias: [ARCHITECTURE.md](ARCHITECTURE.md), [BACKEND.md](BACKEND.md), [INFRASTRUCTURE.md](INFRASTRUCTURE.md).
 
 ## Estado y condiciones previas

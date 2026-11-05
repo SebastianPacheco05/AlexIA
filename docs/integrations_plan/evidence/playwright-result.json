@@ -1,0 +1,67 @@
+{
+  "passed": 41,
+  "checks": [
+    "UI real cargada y título correcto",
+    "Alexa informa sin configurar en fixture",
+    "GET settings real devuelve 200",
+    "API redacta secreto sintético",
+    "Secreto informa configurado sin valor",
+    "Sin marcador local se rechaza",
+    "Origin externo se rechaza",
+    "Cabecera forwarded se rechaza",
+    "Servidor público no expone settings",
+    "Servidor público no expone túnel administrativo",
+    "Health conserva Alexa bloqueada sin credenciales",
+    "Alexa sin ID conserva 503",
+    "API futura de integraciones todavía no existe",
+    "Guardado normaliza solo el metaprompt fixture",
+    "Fixture LF inicia sin cambios pendientes",
+    "Panel Integraciones visible",
+    "GitHub permanece sin conectar",
+    "Modal GitHub abre",
+    "Conectar GitHub permanece deshabilitado",
+    "Escape cierra modal GitHub",
+    "Foco vuelve al botón GitHub",
+    "Editar muestra barra de guardado",
+    "Restaurar contenido oculta barra",
+    "Filtro GEMINI muestra dos variables",
+    "Campo de secreto fixture está vacío y protegido",
+    "Nombre de variable inválido se rechaza",
+    "Variable nueva queda solo en editor",
+    "Descartar pide confirmación de edición",
+    "Variable descartada no persiste",
+    "Guía Alexa abre",
+    "Sin túnel copiar está deshabilitado",
+    "Guía abre Entorno",
+    "Configuración inválida devuelve 422",
+    "Error no modifica revisión persistida",
+    "Guardado preserva secreto sin exponerlo",
+    "Panel móvil accesible",
+    "Sin desbordamiento horizontal a 390 px",
+    "Modal GitHub móvil abre",
+    "Sin excepciones JavaScript",
+    "Sin errores de consola en recorrido UI",
+    "Sin warnings de consola"
+  ],
+  "observations": [
+    {
+      "id": "OBS-01",
+      "description": "Un metaprompt CRLF se normaliza a LF en textarea y la UI muestra cambios sin editar.",
+      "scope": "Comportamiento existente; se reprodujo en configuración temporal, no se cambió el código del producto."
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "warnings": [],
+  "real_backend": true,
+  "mocked_requests": false,
+  "runtime_configuration": "temporary-without-provider-credentials",
+  "desktop": {
+    "width": 1440,
+    "height": 900
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390
+  }
+}

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('.', import.meta.url));
 export default defineConfig({
   root,
+  clearScreen: false,
   envDir: false,
   envPrefix: 'PUBLIC_UI_',
   plugins: [tailwindcss(), {

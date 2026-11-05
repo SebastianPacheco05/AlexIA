@@ -10,3 +10,5 @@ node_modules/
 Thumbs.db
 .alexia-ui-*.tmp
 ui/dist/
+.alexia-data/
+.playwright-cli/

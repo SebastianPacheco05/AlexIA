@@ -1,6 +1,7 @@
 use axum::{Json, http::StatusCode};
 use serde::Serialize;
 
+pub mod github_intents;
 pub mod service;
 
 #[derive(Serialize)]

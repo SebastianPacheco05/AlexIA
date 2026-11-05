@@ -1,5 +1,17 @@
 # AlexIA — Infraestructura
 
+2026-11-03, decisión implementada para piloto local Windows: persistencia por
+checkout en `.alexia-data/`, con ACL privada protegida y excluida de Git/imagen;
+tokens exclusivamente en Credential Manager por referencias aleatorias. Journal
+schema 1 con sync/compactación, límite 64 MiB/archivo y exclusión de apertura
+en Windows. Una instancia por directorio; sin almacenamiento remoto. Los SO
+sin backend vault devuelven indisponibilidad, sin fallback en texto plano.
+Retención de resultados 24 h después de terminar mediante mantenimiento;
+efectos no reconciliados se conservan. No borrar estado para reintentar efectos.
+Sin receptor de pushes ni infraestructura nueva; modo manual explícito.
+Operación, privacidad, límites y pendientes en
+[el tracker](../../docs/integrations_plan/evidence/IMPLEMENTACION-PLAN00-PLAN01.md).
+
 Fecha: 2026-10-23. Diseño objetivo; no se provisionan recursos con este documento. Ver [ARCHITECTURE.md](ARCHITECTURE.md), [BACKEND.md](BACKEND.md) y [DEPLOY.md](DEPLOY.md).
 
 ## Topología mínima aprobada

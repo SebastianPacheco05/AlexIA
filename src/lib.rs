@@ -1,12 +1,18 @@
 pub mod alexa;
+pub mod auth;
 pub mod config;
-pub mod providers;
-pub mod voice;
-pub mod settings;
 pub mod control;
-pub mod ui_process;
+pub mod integrations;
+pub mod jobs;
+pub mod projects;
+pub mod providers;
+pub mod secrets;
+pub mod settings;
 pub mod static_ui;
+pub mod storage;
 pub mod tunnel;
+pub mod ui_process;
+pub mod voice;
 
 use alexa::service::AlexaService;
 use axum::{

@@ -1,5 +1,8 @@
 # AlexIA
 
+2026-11-03: [PLAN00/PLAN01 — implementación parcial y guía de GitHub App](docs/integrations_plan/evidence/IMPLEMENTACION-PLAN00-PLAN01.md).
+Núcleo de jobs y conexión/selección GitHub disponibles para piloto local; crear PR y squash merge permanecen bloqueados por las guardas pendientes. GitHub Desktop no es necesario.
+
 Base en Rust de una skill comunitaria para consultar Gemini desde Alexa.
 Software gratuito y de codigo abierto, licencia MIT, sin suscripciones,
 cobros propios ni base de datos. Proyecto independiente, sin afiliacion a
@@ -12,6 +15,19 @@ modelos elegibles y condiciones pueden cambiar. No se garantiza operacion sin
 costos externos. No hay facturacion ni seleccion automatica de un plan de pago.
 
 ## Estado y contrato inicial
+
+La evolución hacia automatización para una comunidad de desarrolladores se detalla
+en [el índice y la base común de integraciones](docs/integrations_plan/PLAN00-BASE-COMUN.md).
+Incluye veinte planes individuales, dependencias, permisos, contratos propuestos,
+pruebas y reversión. Son propuestas pendientes de implementación; el estado actual
+de GitHub continúa siendo «Sin conectar». La [validación con Playwright CLI](docs/integrations_plan/evidence/VALIDACION-2026-11-03.md)
+registra 41 comprobaciones correctas y una observación abierta sobre saltos CRLF
+del metaprompt. No se conectaron cuentas ni se modificó infraestructura.
+
+La [revisión R2 del plan GitHub](docs/integrations_plan/PLAN01-GITHUB.md) incorpora
+los comandos Alexa para crear una PR desde la última rama subida sin PR y hacer
+squash merge a una rama indicada cuando pasen los tests definidos. Los flujos
+siguen pendientes de implementación; la prueba de UI anterior no los acredita.
 
 - `GET /health`: HTTP 200, `{"status":"ok","alexa":"blocked","gemini":"not_configured"}`.
   Indica que el servidor esta vivo, no que las integraciones funcionen.

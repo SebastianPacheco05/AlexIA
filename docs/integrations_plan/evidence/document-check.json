@@ -1,0 +1,13 @@
+{
+  "plans": 21,
+  "individual_applications": 20,
+  "markdown_files": 22,
+  "plan_lines": 5043,
+  "plan_words": 43879,
+  "json_examples_valid": 22,
+  "implementation_tasks": 68,
+  "reference_urls": 54,
+  "local_links_valid": true,
+  "original_configuration_unchanged": true,
+  "errors": []
+}

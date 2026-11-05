@@ -1,0 +1,17 @@
+{
+  "revision": "GitHub R2",
+  "date": "2026-11-03",
+  "validation_kind": "documentation_only",
+  "github_plan_lines": 530,
+  "github_plan_words": 7090,
+  "github_implementation_tasks": 11,
+  "plans": 21,
+  "valid_json_examples": 25,
+  "local_links_checked": 122,
+  "reference_urls": 73,
+  "github_api_calls": 0,
+  "remote_writes": 0,
+  "product_code_changes": false,
+  "prior_playwright_evidence_applies_to_new_flows": false,
+  "errors": []
+}

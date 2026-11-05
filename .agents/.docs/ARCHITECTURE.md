@@ -1,5 +1,14 @@
 # AlexIA — Arquitectura y decisiones
 
+2026-11-03, **implementación parcial** de PLAN00/PLAN01: módulos de proyecto,
+sesión local, vault Windows, journal/jobs y selección GitHub. Catálogo y tareas
+funcionan sin ALEXA_SKILL_ID. BYO GitHub App/device flow elegido para el piloto,
+sin broker ni client secret distribuido. Creación y merge permanecen bloqueados
+por aislamiento técnico y precondición de destino sin verificar. No se declara
+completo ninguno de los planes. Decisiones concretas, límites y aceptación en
+[el tracker](../../docs/integrations_plan/evidence/IMPLEMENTACION-PLAN00-PLAN01.md).
+Las descripciones anteriores de esqueleto se conservan como historia.
+
 Fecha: 2026-10-23. Estado: decisiones aprobadas; implementación parcial.
 
 ## Lectura y alcance
@@ -114,3 +123,93 @@ consulta. Riesgo: latencia/cuota y coste de memoria de dos procesos CLI; detalle
 fuentes y aceptación en [BACKEND.md](BACKEND.md#latencia-timeouts-y-errores).
 
 2026-10-23: se documentan las decisiones aprobadas por el propietario y el estado del esqueleto. Acceso Gemini sin clave y facturación: pendiente de validación. Hermes/OmniRoute: preparación de interfaz aprobada, integración pendiente. Hosting concreto y presupuesto económico: pendientes. Cambios posteriores registrarán fecha, motivo, impacto, documentos afectados y pruebas; conservar el historial de decisiones sustituidas.
+
+
+## 2026-11-03 — Planes de integraciones para comunidad técnica
+
+Estado: **planes propuestos; conectores pendientes de implementación**. El propietario
+solicita orientar AlexIA a una comunidad técnica, automatizar tareas de desarrollo y
+conectar tanto herramientas locales como servicios externos. Se crean veinte planes
+en la ubicación solicitada, con contratos transversales centralizados en
+[PLAN00 — Base común e índice](../../docs/integrations_plan/PLAN00-BASE-COMUN.md).
+Los archivos individuales siguen `PLAN##-APLICACION.md`; separan PowerShell/Bash y
+Linear/Jira porque sus contratos y permisos son diferentes.
+
+La propuesta conserva Rust y la consulta directa de Alexa. Plantea proyectos,
+identidad, credenciales del sistema, capacidades, trabajos y ejecutores controlados;
+no declara aprobada ni implementada infraestructura nueva, persistencia de jobs,
+brokers OAuth o servicio SaaS multiusuario. Prioridad sugerida: validación local,
+Gitleaks/OSV y lectura GitHub/Actions, antes de escritura remota o producción.
+
+Motivo: convertir consultas técnicas en flujos verificables con evidencia. Consecuencias
+y riesgos: nueva autorización por usuario/recurso, custodia de secretos, aislamiento
+de procesos y efectos externos. Cada plan detalla prerequisitos, fases, aceptación,
+pruebas y reversión; los presupuestos de recursos son propuestas sin medición.
+
+La skill oficial Playwright CLI se instaló antes de crear los Markdown. La UI/API
+actual se comprobó con backend real y configuración temporal sin credenciales:
+41 comprobaciones correctas y una observación abierta por normalización CRLF/LF.
+[Informe y evidencias](../../docs/integrations_plan/evidence/VALIDACION-2026-11-03.md).
+No se implementó ningún conector, se conectó ninguna cuenta ni se modificó
+infraestructura externa. `.env` y metaprompt originales permanecieron intactos.
+
+
+## 2026-11-03 — GitHub R2: creación de PR y squash merge por Alexa
+
+Estado: **requisitos solicitados; plan actualizado; implementación pendiente**.
+El propietario solicita invocar «Alexa, abre mi agente», crear una PR desde la
+última rama subida por el usuario conectado cuando no tenga PR y hacer squash
+merge de su última PR —o una creada para él por AlexIA/Antigravity— a una rama
+indicada, después de que pasen todos los tests definidos.
+
+Se aclaró expresamente que crear significa abrir una PR nueva desde rama sin PR,
+no reescribir una PR existente ni duplicar una ajena. La revisión
+[PLAN01 R2](../../docs/integrations_plan/PLAN01-GITHUB.md) sustituye el alcance inicial
+solo de lectura para GitHub; PLAN00 y PLAN05 quedaron sincronizados. Otros
+conectores mantienen sus alcances. No se implementó código ni se hizo una
+operación de escritura GitHub al revisar estos documentos.
+
+Decisiones de diseño propuestas: identidad humana mediante user access token e ID
+estable, vínculo con Alexa, índice verificable de pushes con frescura/cobertura,
+recibos por usuario para PR de bot, redacción técnica Antigravity separada del
+perfil de voz y publicación por backend. No inferir la última rama por fecha de
+commit, ni que una PR es propia por ser dueño del repositorio. Sin evidencia de
+último push, solicitar selección de rama.
+
+El merge fija una PR y resuelve el destino; retarget requiere capacidad específica
+y gate nuevo. Comprobar tests por snapshot/base/intento y respetar requisitos de
+GitHub, sin bypass ni estrategia distinta de squash. El endpoint REST condiciona
+head mediante sha pero no ofrece precondición equivalente de base: la revisión
+documenta esa carrera residual y no promete atomicidad inexistente.
+
+Aceptación y pruebas futuras se detallan en PLAN01: autoría, duplicados, PR ajenas,
+CI ausente/antiguo/fallido, cambios concurrentes y reconciliación. Esta revisión es
+documental. La prueba de 41 comprobaciones anterior acredita UI/API actual, no
+estos nuevos recorridos ni configuración de la skill Amazon.
+
+
+## 2026-11-03 — Consistencia C1 de PLAN00 y GitHub R2
+
+Estado: **contratos corregidos; implementación pendiente; guard de destino aún no verificado**.
+La auditoría cruzada identificó doce conflictos de diseño. Once se corrigieron en
+PLAN00/PLAN01 y la dependencia PLAN05: selección asíncrona sin proyecto conocido,
+proyectos remotos, idempotencia estable, retención de procedencia, estados y
+continuaciones, canal Alexa interno/credenciales por rol, ingreso durable de eventos,
+grants snapshot/follow_ref, dependencias acíclicas, readiness por capacidad y journal
+de efectos con reconciliación. Detalle y criterios en
+[la auditoría C1](../../docs/integrations_plan/evidence/PLAN00-GITHUB-CONSISTENCIA.md).
+
+El grafo canónico vive en PLAN00; el cliente GitHub no depende de un conector ya
+terminado, y lectura CI no exige la creación/merge completos ni Antigravity disponible.
+BC-02b se completa antes de efectos reales, BC-07a antes de afirmar observación
+automática de pushes y BC-04t antes de redacción técnica aislada.
+
+Condición abierta C12: no se ha demostrado un mecanismo suficiente para garantizar
+destino frente a retarget concurrente. destination_guard_status permanece unverified;
+el flujo automático no envía retarget ni merge hasta verificarlo. Una relectura o lock
+local no lo acredita. Esta condición no bloquea núcleo, selección, creación o CI.
+No se declara resuelta por documentarla ni se cambia el requisito del propietario.
+
+Validación C1: grafo de 25 nodos y 46 aristas acíclico, esquemas de ejemplos y enlaces
+locales correctos. Es evidencia documental, no prueba runtime de integraciones.
+No se modificó producto, configuración original ni infraestructura externa.
